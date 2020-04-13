@@ -1,0 +1,26 @@
+{
+  "name": "eazytask-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "test": "node tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gjergjk71/eazytask-back.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gjergjk71/eazytask-back/issues"
+  },
+  "homepage": "https://github.com/gjergjk71/eazytask-back#readme",
+  "dependencies": {
+    "compression": "1.7.4",
+    "dotenv": "8.2.0",
+    "express": "4.17.1"
+  }
+}
