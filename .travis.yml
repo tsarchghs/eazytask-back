@@ -7,3 +7,8 @@ script:
   - npm install
   - echo 'Running tests'
   - npm run test
+deploy:
+  provider: heroku
+  api_key: e05950f4-6058-49ad-bd9c-dd80ed1d6070
+  app:
+    staging: eazytask-back
