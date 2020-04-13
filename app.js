@@ -4,10 +4,10 @@ const express = require('express')
 const compression = require("compression");
 
 const app = express()
-const port = 3000
+const PORT = process.env.PORT || 4000
 
 app.use(compression())
 
 app.get('/', (req, res) => res.send('Test'))
 
-app.listen(port, () => console.log(`Listening at http://localhost:${port}`))
+app.listen(PORT, () => console.log(`Listening at http://localhost:${PORT}`))
