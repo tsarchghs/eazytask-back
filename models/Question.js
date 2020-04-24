@@ -3,8 +3,11 @@
 const { NonNullString } = require("./common")
 
 module.exports = (sequelize, DataTypes) => {
-    let Skill = sequelize.define("Skill", {
-        name: NonNullString(DataTypes.STRING)
+    let Question = sequelize.define("Question", {
+        value: NonNullString(DataTypes.STRING)
     })
-    return Skill;
+    Question.associate = models => {
+        Question.belongsTo(models.Task);
+    }
+    return Question;
 }
