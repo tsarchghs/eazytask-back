@@ -1,8 +1,9 @@
 const yup = require("yup");
+const common = require("../common");
 
 module.exports = yup.object().shape({
-    fields: yup.array().of(yup.string().oneOf(["user","offers"])),
-    category_id: yup.number().positive().integer(),
+    fields: common.user_offers_fields,
+    category_id: common.id,
     due_date: yup.date(),
     expire_soon: yup.boolean(),
     min_budget: yup.number().integer(),
