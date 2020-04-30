@@ -25,7 +25,11 @@ module.exports = ({ database}) => {
           return res.send({
             code: 409,
             message: "Cannot create resource because it conflicts with the current state of the server.",
-            errors: err.errors.map(err => err.message)  
+            errors: err.errors.map(err => {
+              if (err.message.indexOf("email") !== -1 &&
+                err.message.indexOf("unique") !== -1) return "users.email must be unique"
+              else return err.message
+            })  
           })
       }
       
