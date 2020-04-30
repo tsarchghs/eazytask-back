@@ -16,7 +16,7 @@ deploy:
 services:
   - mysql
 before_install:
-  - sudo mysql -e 'create database eazytask;create database eazytask-test;'
+  - mysql -u root -e 'CREATE DATABASE eazytask-test;'
 env:
   - MYSQL_DATABASE_TESTING=eazytask_test
   - MYSQL_USERNAME_TESTING="root"
