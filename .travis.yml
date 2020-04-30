@@ -19,5 +19,4 @@ before_install:
   - mysql -u root -e 'CREATE DATABASE eazytask_test;'
 env:
   - MYSQL_DATABASE_TESTING=eazytask_test
-  - MYSQL_USERNAME_TESTING="root"
-  - MYSQL_PASSWORD_TESTING=""
+  - MYSQL_USERNAME_TESTING=root
