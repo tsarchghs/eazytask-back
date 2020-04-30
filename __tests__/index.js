@@ -40,7 +40,7 @@ cases.forEach(case_ => {
             }
             expect(JSON.stringify(data))
                 .toBe(JSON.stringify(case_.response))
-            done()     
+            done();
         })
     })
 

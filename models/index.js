@@ -7,8 +7,17 @@ var Sequelize = require('sequelize');
 var basename = path.basename(__filename);
 var dbs = {};
 
-var sequelize = new Sequelize(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@localhost:3306/${process.env.MYSQL_DATABASE}`);
-var sequelizeTesting = new Sequelize(`mysql://${process.env.MYSQL_USERNAME_TESTING}:${process.env.MYSQL_PASSWORD_TESTING}@localhost:3306/${process.env.MYSQL_DATABASE_TESTING}`);
+// var sequelize = new Sequelize(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@localhost:3306/${process.env.MYSQL_DATABASE}`);
+// var sequelizeTesting = new Sequelize(`mysql://${process.env.MYSQL_USERNAME_TESTING}:${process.env.MYSQL_PASSWORD_TESTING}@localhost:3306/${process.env.MYSQL_DATABASE_TESTING}`);
+const sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
+    host: 'localhost',
+    dialect: "mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+});
+
+const sequelizeTesting = new Sequelize(process.env.MYSQL_DATABASE_TESTING, process.env.MYSQL_USERNAME_TESTING, process.env.MYSQL_PASSWORD_TESTING, {
+    host: 'localhost',
+    dialect: "mysql",/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+});
 
 
 [sequelize, sequelizeTesting].forEach(seq => {
