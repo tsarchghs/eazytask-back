@@ -13,6 +13,6 @@ module.exports = yup.object().shape({
         city: yup.string(),
         address: yup.string(),
         profile_image: yup.string(),
-        notification_option: yup.string().oneOf("SMS","EMAIL")
+        notification_option: yup.string().oneOf(["SMS","EMAIL"])
     })
 })
