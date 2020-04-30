@@ -7,8 +7,6 @@ module.exports = (sequelize, DataTypes) => {
         area_of_activity: NonNullUniqueString(DataTypes.STRING)
     })
     Tasker.associate = models => {
-        console.log(models.TaskerSkill)
-
         Tasker.belongsTo(models.User)
         Tasker.belongsToMany(models.Language, {
             through: models.Tasker_Language,

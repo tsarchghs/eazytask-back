@@ -7,8 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         name: NonNullUniqueString(DataTypes.STRING)
     })
     Skill.associate = models => {
-        console.log(models.TaskerSkill)
-   Skill.belongsToMany(
+    Skill.belongsToMany(
             models.Tasker, 
             { 
                 through: models.Tasker_Skill, 
