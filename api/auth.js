@@ -1,34 +1,42 @@
-const User =  require('../models/User');
+const validateRequest = require("../middlewares/validateRequest");
+const post_auth = require("./validations/auth/post")
+const { createToken } = require("../utils")
+const bcrypt = require("bcrypt")
+const router = require("express").Router();
 const jwt =  require('jsonwebtoken');
-const passport =  require('passport');
+const { JWT_SECRET } =  require('../configs.js');
 
-const jwtSecret =  require('../config/jwtConfig');
+const INVALID_CREDENTIALS_RESPONSE = {
+    status: "error",
+    code: 400,
+    message: "Invalid credentials",
+    data: null,
+    errors: [
+        "The email address or password is incorrect. Please try again."
+    ]
+}
 
-module.exports = app => {
-    app.post('/auth', (req, res, next) => {
-        passport.authenticate('login', (err, user, info) => {
-            if (err) {
-                console.log(err);
+module.exports = ({ database }) => {
+    console.log({database})
+    let { User } = require("../models")[database]
+    // router.get("/auth", )
+    router.post('', validateRequest(post_auth), async (req, res) => {
+        let user = await User.findOne({ where: { email: req.body.email.toLowerCase() } })
+        if (!user) return res.send(INVALID_CREDENTIALS_RESPONSE)
+        const match = await bcrypt.compare(req.body.password, user.password);
+        console.log({match})
+        user.password = undefined
+        if (match) return res.send({
+            status: "success",
+            code: 200,
+            message: "Authorized",
+            data: {
+                token: createToken(user.id),
+                user,
+                expires_in: 10000
             }
-            if (info != undefined) {
-                console.log(info.message);
-                res.send(info.message);
-            } else {
-                req.logIn(user, err => {
-                    User.findOne({
-                        where: {
-                            username: user.username,
-                        },
-                    }).then(user => {
-                        const token = jwt.sign({ id: user.username }, jwtSecret.secret);
-                        res.status(200).send({
-                            auth: true,
-                            token: token,
-                            message: 'user found & logged in',
-                        });
-                    });
-                });
-            }
-        })(req, res, next);
+        }) 
+        else return res.send(INVALID_CREDENTIALS_RESPONSE)
     });
+    return router;
 };
