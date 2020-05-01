@@ -18,4 +18,4 @@ services:
 before_install:
   - mysql -u root -e 'CREATE DATABASE eazytask;CREATE DATABASE eazytask_test;'
 env:
-  - MYSQL_DATABASE_TESTING=eazytask_test MYSQL_USERNAME_TESTING=root
+  - MYSQL_DATABASE=eazytask MYSQL_USERNAME=root MYSQL_DATABASE_TESTING=eazytask_test MYSQL_USERNAME_TESTING=root

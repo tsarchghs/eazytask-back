@@ -6,10 +6,17 @@
   }, {
     "description" : "In development",
     "url" : "http://eazytask-back.herokuapp.com/api/v1"
-  }, {
-    "description" : "Works only in self-hosted",
-    "url" : "http://localhost:4000/api/v1"
-  } ],
+  },
+  {
+    "description": "Works only in self-hosted",
+    "url": "http://localhost:4000/api/v1"
+  }
+,
+{
+  "description": "Works only in self-hosted",
+  "url": "http://localhost:5124/api/v1"
+}
+],
   "info" : {
     "description" : "Eazytask API Specification<br> <h3>Notes for API consumers:</h3><br> <ul> <li>readOnly - Declares the property as \"read only\". This means that it MAY be sent as part of a response but SHOULD NOT be sent as part of the request.</li> <li>writeOnly - Declares the property as \"write only\". Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response.</li> </ul>",
     "version" : "1.0.1-oas3",
