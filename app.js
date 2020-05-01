@@ -17,8 +17,7 @@ const run = async ({ app, port, resetDb, database}) => {
     if (resetDb){
         models.sequelize.drop() 
     }
-    // console.log({ models.seq.sync})
-    models.sequelize.sync({ force: true });
+    models.sequelize.sync({ force: false });
     app.use(compression())
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
