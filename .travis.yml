@@ -6,6 +6,7 @@ script:
   - echo 'Build starting'
   - echo 'Installing depedencies'
   - npm install
+  - npm install -g jest
   - echo 'Running tests'
   - npm run test
 deploy:
