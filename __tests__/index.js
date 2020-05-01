@@ -1,14 +1,15 @@
 const fetch = require('node-fetch');
 const users_cases = require("./users");
+const auth_cases = require("./auth");
 
 const { setup: setupDevServer } = require('jest-dev-server')
 const { teardown: teardownDevServer } = require('jest-dev-server')
 
-jest.setTimeout(25000);
+jest.setTimeout(10000);
 
-let cases = [...users_cases]
-
-let port = 5124  
+let cases = [...users_cases, ...auth_cases]
+console.log(JSON.stringify(cases))
+let port = 5124
 let URI = () => `http://localhost:${port}/api/v1`
 
 beforeAll(async () => {
@@ -38,11 +39,25 @@ cases.forEach(case_ => {
                 delete data.data.updatedAt
                 delete data.data.password
             }
+            if (case_.lazyFieldValidation){
+                case_.lazyFieldValidation.forEach(field => {
+                    let path = field.split(".");
+                    let end = path[path.length -1 ]
+                    path = path.slice(0,-1);
+                    let dest = data
+                    path.forEach(p => {
+                        dest = dest[p];
+                        if (dest === undefined) 
+                            done.fail(new Error(`Failed lazy field validation: ${field}`));
+                    })
+                    // console.log({ path, dest, end, val: dest[end]})
+                    if (dest[end]) delete dest[end]
+                    else done.fail(new Error(`Failed lazy field validation: ${field}`));
+                })
+            }
             expect(JSON.stringify(data))
                 .toBe(JSON.stringify(case_.response))
             done();
         })
     })
-
 })
-    

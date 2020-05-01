@@ -55,29 +55,31 @@ module.exports = [
         }
     },
     {
+        id: "users_3",
         title: "[3] POST /users with valid data",
         description: "Return created resource",
         path: "/users",
         request: getPostRequest({
             "first_name": "string",
             "last_name": "string",
-            "email": "user@example.com",
+            "email": "existing_test_email@example.com",
             "password": "string"
         }),
         response: {
             "message": "success",
             "code": 201,
             "data": {
-                "id": 1,
                 "first_name": "string",
                 "last_name": "string",
-                "email": "user@example.com",
+                "email": "existing_test_email@example.com",
                 "notification_option": "EMAIL",
                 "isAdmin": false,
             }
-        }
+        },
+        lazyFieldValidation: ["data.id"]
     },
     {
+        id: "users_4",
         title: "[4] POST /users with existing email",
         description: "Return 409 error",
         path: "/users",
@@ -87,18 +89,19 @@ module.exports = [
             "email": "existing_test_email@example.com",
             "password": "string"
         }),
-        before: () => {
-            User.create({
+        before: async () => {
+            await User.create({
                 "first_name": "string",
                 "last_name": "string",
                 "email": "existing_test_email@example.com",
-                "password": "string",
+                "password": "$2b$10$IkAoMh2TGDCzaLiOMq.Dbe8REEk02Hi3.530Ne9FrKmxtwLejJ6yW",
                 "isAdmin": false,
                 "notification_option": "EMAIL"
-            })
+            }).catch(err => console.log("Test 3 already ran"))
 
         },
         response: {
+            "status": "error",
             "code": 409,
             "message": "Cannot create resource because it conflicts with the current state of the server.",
             "errors": [
