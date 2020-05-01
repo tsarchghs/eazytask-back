@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app",
-    "test": "\"jest __tests__/.*.test.js$ --force-exit --coverage\""
+    "test": "\"jest __tests__/.*.test.js$ --force-exit\"",
+    "test-dev": "\"jest __tests__/.*.test.js$ --force-exit --coverage\""
   },
   "repository": {
     "type": "git",
