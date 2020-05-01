@@ -1,4 +1,4 @@
-let { User } = require("../models")[process.env.MYSQL_DATABASE_TESTING] 
+let { User } = require("../../models")[process.env.MYSQL_DATABASE_TESTING] 
 
 let getPostRequest = body => ({
     body,

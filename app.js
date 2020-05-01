@@ -6,7 +6,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const logger = require("morgan")("dev")
 
-const run = async ({ app, port, resetDb, database}) => {
+const run = async ({ app, port, resetDb, database,listen}) => {
     let models = require("./models")[database];
     console.log(999,{models})
     const PORT = port || process.env.PORT || 4000
@@ -30,14 +30,17 @@ const run = async ({ app, port, resetDb, database}) => {
     
     app.use("/api/v1",MainRouter({database}))
     app.get('/', (req, res) => res.send('Test'))
-    
-    app.listen(PORT, () => console.log(`Listening at http://localhost:${PORT}`))
+    if (listen){
+        app.listen(PORT, () => console.log(`Listening at http://localhost:${PORT}`))
+    }
+    return app;
 }
 
 
 if (require.main === module) run({ 
     app: express(), 
     database: "eazytask", 
+    listen: true
 })
 
 module.exports = run

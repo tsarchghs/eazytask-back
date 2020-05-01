@@ -6,4 +6,5 @@ require("./app")({
     database: "eazytask_test",
     port: 5124,
     resetDb: true,
+    listen: true
 })
