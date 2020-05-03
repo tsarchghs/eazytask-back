@@ -1,44 +1,42 @@
-const fetch = require('node-fetch');
+
+
 const users_cases = require("./meta/users");
 const auth_cases = require("./meta/auth");
 
-const { setup: setupDevServer } = require('jest-dev-server')
-const { teardown: teardownDevServer } = require('jest-dev-server')
+const request = require('supertest');
+const app = require("../src/app")
+const agent = request(app);
+const  models = require("../src/models")
 
-jest.setTimeout(10000);
+jest.setTimeout(5000);
 
-let cases = [...users_cases, ...auth_cases]
-console.log(JSON.stringify(cases))
-let port = 5124
-let URI = () => `http://localhost:${port}/api/v1`
+let cases = [...users_cases] // ...auth_cases
 
 beforeAll(async () => {
-    setupDevServer({
-        command: `node ./testServer.js`,
-        launchTimeout: 50000,
-        port: 3000,
-    })
-    await new Promise(resolve => setTimeout(resolve, 5000));
-})
-
-afterAll(async done => {
-    teardownDevServer()
-    done()
+    await models.sequelize.sync({ force: true });
+    await models.User.create({
+        "first_name": "string",
+        "last_name": "string",
+        "email": "existing_test_email@example.com",
+        "password": "$2b$10$IkAoMh2TGDCzaLiOMq.Dbe8REEk02Hi3.530Ne9FrKmxtwLejJ6yW",
+        "isAdmin": false,
+        "notification_option": "EMAIL"
+    }).catch(err => console.log("DIDNT CREATE---------"))
 })
 
 cases.forEach(case_ => {
     describe(case_.title, () => {
         it(case_.description, async done => {
+            const res = await agent[case_.request.method.toLowerCase()](`/api/v1/${case_.path}`)
+                                .send(case_.request.body)
+            // expect(res.header["content-type"]).toBe("application/json; charset=utf-8")
+            console.log(res.text,"TEXT")
+            let data = JSON.parse(res.text)
             if (case_.before) await case_.before()
-            let api = `${URI()}${case_.path}`
             case_.request.body = JSON.stringify(case_.request.body)
-            let res = await fetch(api, case_.request)
-            let data = await res.json()
-            if (data.data) {
-                delete data.data.createdAt
-                delete data.data.updatedAt
-                delete data.data.password
-            }
+            
+            console.log(case_.title,data)
+
             if (case_.lazyFieldValidation) {
                 case_.lazyFieldValidation.forEach(field => {
                     let path = field.split(".");
@@ -47,16 +45,22 @@ cases.forEach(case_ => {
                     let dest = data
                     path.forEach(p => {
                         dest = dest[p];
-                        if (dest === undefined)
+                        if (dest === undefined){
+                            console.log(data,5551)
                             done.fail(new Error(`Failed lazy field validation: ${field}`));
+                        }
                     })
-                    // console.log({ path, dest, end, val: dest[end]})
                     if (dest[end]) delete dest[end]
-                    else done.fail(new Error(`Failed lazy field validation: ${field}`));
+                    else {
+                        console.log(data,5555)
+                        done.fail(new Error(`Failed lazy field validation: ${field}`));
+                    }
                 })
             }
+
             expect(JSON.stringify(data))
                 .toBe(JSON.stringify(case_.response))
+            
             done();
         })
     })
