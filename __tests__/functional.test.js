@@ -10,7 +10,7 @@ const  models = require("../src/models")
 
 jest.setTimeout(5000);
 
-let cases = [...users_cases] // ...auth_cases
+let cases = [...users_cases, ...auth_cases]
 
 beforeAll(async () => {
     await models.sequelize.sync({ force: true });
