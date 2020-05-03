@@ -14,6 +14,7 @@ const { errorHandler, caseInsensitiveEmail } = require("./middlewares")
 
 const api_docs = require("./lib/api-docs")
 const users_api = require("./lib/users-api")
+const auth_api = require("./lib/auth-api")
 
 const app = express();
 
@@ -24,7 +25,8 @@ app.use(logger)
 app.use(caseInsensitiveEmail)
 
 app.use("/api/v1",api_docs)
-app.use("/api/v1",users_api)
+app.use("/api/v1", users_api)
+app.use("/api/v1", auth_api)
 
 // app.use("/api/v1",MainRouter)
 app.get('/', (req, res) => res.json({test:true}))
