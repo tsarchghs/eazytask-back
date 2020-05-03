@@ -10,7 +10,12 @@ var basename = path.basename(__filename);
 
 var db = {};
 
-console.log(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD,process.env.MYSQL_HOST)
+if (process.env.IN_TRAVIS){
+    process.env.MYSQL_DATABASE = "eazytask_test"
+    process.env.MYSQL_USERNAME = "root"
+    process.env.MYSQL_PASSWORD = undefined
+    process.env.MYSQL_HOST = "localhost"
+}
 const sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
     host: process.env.MYSQL_HOST,
     dialect: "mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
