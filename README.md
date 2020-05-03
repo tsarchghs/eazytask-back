@@ -1,5 +1,7 @@
 # eazytask-back
 [![Build Status](https://travis-ci.com/gjergjk71/eazytask-back.svg?token=QpSVmx5Fy3yptqbZpksN&branch=master)](https://travis-ci.com/gjergjk71/eazytask-back)
+[![codecov](https://codecov.io/gh/gjergjk71/eazytask-back/branch/master/graph/badge.svg?token=M3XIHZWBQ6)](https://codecov.io/gh/gjergjk71/eazytask-back)
+
 <h1>Set-up:</h1>
 <ul>
   <li><code>npm install</code></li>

@@ -7,8 +7,10 @@ script:
   - echo 'Installing depedencies'
   - npm install
   - npm install -g jest
+  - npm install -g codecov
   - echo 'Running tests'
   - npm run test
+  - codecov
 deploy:
   provider: heroku
   api_key: e05950f4-6058-49ad-bd9c-dd80ed1d6070
@@ -19,4 +21,4 @@ services:
 before_install:
   - mysql -u root -e 'CREATE DATABASE eazytask;CREATE DATABASE eazytask_test;'
 env:
-  - MYSQL_DATABASE=eazytask MYSQL_USERNAME=root MYSQL_DATABASE_TESTING=eazytask_test MYSQL_USERNAME_TESTING=root
+- IN_TRAVIS=true MYSQL_HOST="localhost" MYSQL_DATABASE="eazytask_test" MYSQL_USERNAME="root" DISABLE_SQL_LOGGING=true CUSTOM_ENV_PATH=true

@@ -73,5 +73,23 @@ module.exports = [
             }
         },
         lazyFieldValidation: ["data.user.id","data.token","data.user.createdAt","data.user.updatedAt"]
-    }
+    },
+    {
+        id: "auth_4",
+        title: "[4] POST /auth with valid email but invalid password",
+        description: "Return errors",
+        path: "/auth",
+        request: getPostRequest({
+            "email": "existing_test_email@gmail.com",
+            "password": "testing"
+        }),
+        response: {
+            "status": "error",
+            "code": 400,
+            "message": "Invalid credentials",
+            "errors": [
+                "The email address or password is incorrect. Please try again."
+            ]
+        }
+    },
 ]
