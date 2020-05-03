@@ -1,4 +1,4 @@
-let { User } = require("../../models")[process.env.MYSQL_DATABASE_TESTING] 
+// let { User } = require("../../src/models")[process.env.MYSQL_DATABASE_TESTING] 
 
 let getPostRequest = body => ({
     body,
@@ -62,7 +62,7 @@ module.exports = [
         request: getPostRequest({
             "first_name": "string",
             "last_name": "string",
-            "email": "existing_test_email@example.com",
+            "email": "example1@example.com",
             "password": "string"
         }),
         response: {
@@ -71,12 +71,12 @@ module.exports = [
             "data": {
                 "first_name": "string",
                 "last_name": "string",
-                "email": "existing_test_email@example.com",
+                "email": "example1@example.com",
                 "notification_option": "EMAIL",
                 "isAdmin": false,
             }
         },
-        lazyFieldValidation: ["data.id"]
+        lazyFieldValidation: ["data.id","data.createdAt","data.updatedAt"]
     },
     {
         id: "users_4",
@@ -90,14 +90,14 @@ module.exports = [
             "password": "string"
         }),
         before: async () => {
-            await User.create({
-                "first_name": "string",
-                "last_name": "string",
-                "email": "existing_test_email@example.com",
-                "password": "$2b$10$IkAoMh2TGDCzaLiOMq.Dbe8REEk02Hi3.530Ne9FrKmxtwLejJ6yW",
-                "isAdmin": false,
-                "notification_option": "EMAIL"
-            }).catch(err => console.log("Test 3 already ran"))
+            // await User.create({
+            //     "first_name": "string",
+            //     "last_name": "string",
+            //     "email": "existing_test_email@example.com",
+            //     "password": "$2b$10$IkAoMh2TGDCzaLiOMq.Dbe8REEk02Hi3.530Ne9FrKmxtwLejJ6yW",
+            //     "isAdmin": false,
+            //     "notification_option": "EMAIL"
+            // }).catch(err => console.log("Test 3 already ran"))
 
         },
         response: {
