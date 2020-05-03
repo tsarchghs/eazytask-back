@@ -9,6 +9,7 @@ script:
   - npm install -g jest
   - echo 'Running tests'
   - npm run test
+  - codecov
 deploy:
   provider: heroku
   api_key: e05950f4-6058-49ad-bd9c-dd80ed1d6070
