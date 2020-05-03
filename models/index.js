@@ -9,13 +9,13 @@ var dbs = {};
 
 // var sequelize = new Sequelize(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@localhost:3306/${process.env.MYSQL_DATABASE}`);
 // var sequelizeTesting = new Sequelize(`mysql://${process.env.MYSQL_USERNAME_TESTING}:${process.env.MYSQL_PASSWORD_TESTING}@localhost:3306/${process.env.MYSQL_DATABASE_TESTING}`);
-const sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
-    host: 'localhost',
+const sequelize = process.env.CLEARDB_DATABASE_URL ? new Sequelize(process.env.CLEARDB_DATABASE_URL) : new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
+    host: process.env.MYSQL_HOST || 'localhost',
     dialect: "mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
 });
 
 const sequelizeTesting = new Sequelize(process.env.MYSQL_DATABASE_TESTING, process.env.MYSQL_USERNAME_TESTING, process.env.MYSQL_PASSWORD_TESTING, {
-    host: 'localhost',
+    host: MYSQL_HOST_TESTING || 'localhost',
     dialect: "mysql",/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
 });
 
