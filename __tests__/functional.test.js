@@ -21,7 +21,7 @@ beforeAll(async () => {
         "password": "$2b$10$IkAoMh2TGDCzaLiOMq.Dbe8REEk02Hi3.530Ne9FrKmxtwLejJ6yW",
         "isAdmin": false,
         "notification_option": "EMAIL"
-    }).catch(err => console.log("DIDNT CREATE---------"))
+    })
 })
 
 cases.forEach(case_ => {
