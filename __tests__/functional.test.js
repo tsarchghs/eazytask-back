@@ -28,7 +28,7 @@ cases.forEach(case_ => {
     describe(case_.title, () => {
         it(case_.description, async done => {
             const res = await agent[case_.request.method.toLowerCase()](`/api/v1/${case_.path}`)
-          6                      .send(case_.request.body)
+                                .send(case_.request.body)
             // expect(res.header["content-type"]).toBe("application/json; charset=utf-8")
             let data = JSON.parse(res.text)
             if (case_.before) await case_.before()
