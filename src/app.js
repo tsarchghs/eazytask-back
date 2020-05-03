@@ -4,7 +4,7 @@ require('express-async-errors');
 
 const models = require("./models")
 if (process.env.DROP_TABLES) models.sequelize.drop()
-models.sequelize.sync({ force: process.env.FORCE_SYNC_DB });
+models.sequelize.sync({ force: false });
 
 const express = require('express')
 const compression = require("compression");
