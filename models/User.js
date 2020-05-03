@@ -1,13 +1,13 @@
 "use strict"
 
-const { NonNullUniqueString } = require("./common")
+const { NonNullUniqueString, NonNullString } = require("./common")
 
 module.exports = (sequelize, DataTypes) => {
     let User = sequelize.define('User', {
         email: NonNullUniqueString(DataTypes.STRING),
         password: NonNullUniqueString(DataTypes.STRING),
-        first_name: NonNullUniqueString(DataTypes.STRING),
-        last_name: NonNullUniqueString(DataTypes.STRING),
+        first_name: NonNullString(DataTypes.STRING),
+        last_name: NonNullString(DataTypes.STRING),
         gender: DataTypes.STRING,
         date_of_birth: DataTypes.DATEONLY,
         short_biography: DataTypes.STRING,

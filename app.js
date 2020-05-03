@@ -1,19 +1,46 @@
 require('dotenv').config()
-
 const express = require('express')
 const compression = require("compression");
-const models = require("./models");
 const bodyParser = require("body-parser")
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+const logger = require("morgan")("dev")
 
-const app = express()
-const PORT = process.env.PORT || 4000
+const run = async ({ app, port, resetDb, database,listen}) => {
+    let models = require("./models")[database];
+    console.log(999,{models})
+    const PORT = port || process.env.PORT || 4000
+    const MainRouter = require("./api");
 
-// models.sequelize.drop() 
-models.sequelize.sync({ force: true });
-app.use(compression())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.get('/', (req, res) => res.send('Test'))
+    if (resetDb){
+        models.sequelize.drop() 
+    }
+    models.sequelize.sync({ force: false || resetDb });
+    app.use(compression())
+    app.use(bodyParser.urlencoded({ extended: true }))
+    app.use(bodyParser.json())
+    app.use(logger)
 
-app.listen(PORT, () => console.log(`Listening at http://localhost:${PORT}`))
+    app.use((req, res, next) => {
+        if (req.body.email) req.body.email = req.body.email.toLowerCase()
+        next();
+    })
+    
+    app.use("/api/v1",MainRouter({database}))
+    app.get('/', (req, res) => res.send('Test'))
+    if (listen){
+        app.listen(PORT, () => console.log(`Listening at http://localhost:${PORT}`))
+    }
+    return app;
+}
+
+
+if (require.main === module) run({ 
+    app: express(), 
+    database: "eazytask", 
+    listen: true
+})
+
+module.exports = run
