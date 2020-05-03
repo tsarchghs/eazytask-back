@@ -1,10 +1,12 @@
 language: node_js
+sudo: enabled
 node_js:
   - "10"
 script:
   - echo 'Build starting'
   - echo 'Installing depedencies'
   - npm install
+  - npm install -g jest
   - echo 'Running tests'
   - npm run test
 deploy:
@@ -12,3 +14,9 @@ deploy:
   api_key: e05950f4-6058-49ad-bd9c-dd80ed1d6070
   app:
     staging: eazytask-back
+services:
+  - mysql
+before_install:
+  - mysql -u root -e 'CREATE DATABASE eazytask;CREATE DATABASE eazytask_test;'
+env:
+  - MYSQL_DATABASE=eazytask MYSQL_USERNAME=root MYSQL_DATABASE_TESTING=eazytask_test MYSQL_USERNAME_TESTING=root
