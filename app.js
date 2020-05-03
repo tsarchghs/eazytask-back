@@ -39,7 +39,7 @@ const run = async ({ app, port, resetDb, database,listen}) => {
 
 if (require.main === module) run({ 
     app: express(), 
-    database: "eazytask", 
+    database: process.env.MYSQL_DATABASE, 
     listen: true
 })
 

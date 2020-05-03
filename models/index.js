@@ -22,8 +22,7 @@ if (!process.env.CLEARDB_DATABASE_URL){
     });
 }
 
-
-process.env.CLEARDB_DATABASE_URL ? [sequelize] : [sequelize, sequelizeTesting].forEach(seq => {
+(process.env.CLEARDB_DATABASE_URL ? [sequelize] : [sequelize, sequelizeTesting]).forEach(seq => {
     let db = {}
     seq.authenticate()
         .then(() => console.log("Authenticated"))
@@ -49,7 +48,7 @@ process.env.CLEARDB_DATABASE_URL ? [sequelize] : [sequelize, sequelizeTesting].f
     
     db.sequelize = seq;
     db.sequelize = seq;
-    if (seq.config.database === "eazytask") dbs["default"] = db
+    if (seq.config.database === process.env.MYSQL_DATABASE) dbs["default"] = db
     dbs[seq.config.database] = db
 })
 
