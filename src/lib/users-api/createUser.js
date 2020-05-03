@@ -12,7 +12,9 @@ module.exports = async (user) => {
     try {
         createdUser = await User.create({ ...user, password: hashedPassword, isAdmin: false })
     } catch (err) {
-        throw new ErrorHandler(409, "Cannot create resource because it conflicts with the current state of the server.", err.errors.map(_ => _.message)) 
+        throw new ErrorHandler(409, "Cannot create resource because it conflicts with the current state of the server.", err.errors.map(error => {
+            return error.message.indexOf("email") !== -1 ? "users.email must be unique" : error.message
+        })) 
     }
     createdUser.password = undefined
     return createdUser
