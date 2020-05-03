@@ -14,13 +14,16 @@ const sequelize = process.env.CLEARDB_DATABASE_URL ? new Sequelize(process.env.C
     dialect: "mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
 });
 
-const sequelizeTesting = new Sequelize(process.env.MYSQL_DATABASE_TESTING, process.env.MYSQL_USERNAME_TESTING, process.env.MYSQL_PASSWORD_TESTING, {
-    host: MYSQL_HOST_TESTING || 'localhost',
-    dialect: "mysql",/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-});
+let sequelizeTesting;
+if (!process.env.CLEARDB_DATABASE_URL){
+    sequelizeTesting = new Sequelize(process.env.MYSQL_DATABASE_TESTING, process.env.MYSQL_USERNAME_TESTING, process.env.MYSQL_PASSWORD_TESTING, {
+        host: process.env.MYSQL_HOST_TESTING || 'localhost',
+        dialect: "mysql",/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+    });
+}
 
 
-[sequelize, sequelizeTesting].forEach(seq => {
+process.env.CLEARDB_DATABASE_URL ? [sequelize] : [sequelize, sequelizeTesting].forEach(seq => {
     let db = {}
     seq.authenticate()
         .then(() => console.log("Authenticated"))
