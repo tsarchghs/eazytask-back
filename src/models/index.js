@@ -16,12 +16,19 @@ if (process.env.IN_TRAVIS){
     process.env.MYSQL_PASSWORD = ""
     process.env.MYSQL_HOST = "localhost"
 }
+
 console.log(process.env.IN_TRAVIS, process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD,919)
-const sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
-    host: process.env.MYSQL_HOST,
-    dialect: "mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
-    logging: true
-});
+
+let sequelize;
+if (process.env.CLEARDB_DATABASE_URL){
+    sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL);
+} else {
+    sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
+        host: process.env.MYSQL_HOST,
+        dialect: "mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
+        logging: false
+    });
+}
 
 sequelize.authenticate()
     .then(() => console.log("Authenticated"))
