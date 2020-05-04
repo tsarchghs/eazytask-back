@@ -7,4 +7,4 @@
   <li><code>npm install</code></li>
   <li><code>npm start</code></li>
 </ul>
-<h5>Run tests: <code>node tests</code></h5>
+<h5>Run tests: <code>npm run test</code></h5>
