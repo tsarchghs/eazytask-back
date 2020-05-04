@@ -10,7 +10,10 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
+            - run: npm install jest -g
+            - run: npm install codecov -g
             - run: npm test
+            - run: codecov
 workflows:
     build-and-test:
       jobs:
