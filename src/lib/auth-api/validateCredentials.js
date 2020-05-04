@@ -9,7 +9,7 @@ const INVALID_CREDENTIALS_ERROR = new ErrorHandler(400, "Invalid credentials", [
 ])
 
 module.exports = async ({email,password}) => {
-    let user = await User.findOne({ where: { email: email.toLowerCase() } })
+    let user = await User.scope('withPassword').findOne({ where: { email: email.toLowerCase() } })
     if (!user) throw INVALID_CREDENTIALS_ERROR
     const match = await bcrypt.compare(password, user.password);
     console.log({ match })

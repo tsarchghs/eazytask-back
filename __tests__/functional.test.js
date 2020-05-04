@@ -28,7 +28,10 @@ cases.forEach(case_ => {
     describe(case_.title, () => {
         it(case_.description, async done => {
             const res = await agent[case_.request.method.toLowerCase()](`/api/v1/${case_.path}`)
-                                .send(case_.request.body)
+                                    .set("Accept",case_.request.headers["Accept"] || "")
+                                    .set("Content-Type",case_.request.headers["Content-Type"] || "")
+                                    .set("Authorization",case_.request.headers["Authorization"] || "")
+                                    .send(case_.request.body)
             // expect(res.header["content-type"]).toBe("application/json; charset=utf-8")
             let data = JSON.parse(res.text)
             if (case_.before) await case_.before()
@@ -44,12 +47,14 @@ cases.forEach(case_ => {
                     path.forEach(p => {
                         dest = dest[p];
                         if (dest === undefined){
-                            done.fail(new Error(`Failed lazy field validation: ${field}`));
+                            console.log(data,911)
+                            done.fail(new Error(`[1] Failed lazy field validation: ${field}`));
                         }
                     })
                     if (dest[end]) delete dest[end]
                     else {
-                        done.fail(new Error(`Failed lazy field validation: ${field}`));
+                        console.log(data, 912)
+                        done.fail(new Error(`[2] Failed lazy field validation: ${field}`));
                     }
                 })
             }
