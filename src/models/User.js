@@ -3,9 +3,21 @@
 const { NonNullUniqueString, NonNullString } = require("./common")
 
 module.exports = (sequelize, DataTypes) => {
+    let options = {
+        defaultScope: {
+            attributes: { exclude: ['password'] },
+        },
+        scopes: {
+            withPassword: {
+                attributes: {},
+            }
+        }
+    }
     let User = sequelize.define('User', {
         email: NonNullUniqueString(DataTypes.STRING),
-        password: NonNullUniqueString(DataTypes.STRING),
+        password: {
+            ...NonNullUniqueString(DataTypes.STRING),
+        },
         first_name: NonNullString(DataTypes.STRING),
         last_name: NonNullString(DataTypes.STRING),
         gender: DataTypes.STRING,
@@ -24,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
             default: false,
             allowNull: false
         }
-    });
+    }, options);
     User.associate = models => {
         User.hasOne(models.Tasker)
         User.hasMany(models.Task);
