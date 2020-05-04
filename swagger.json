@@ -519,7 +519,9 @@
       "get" : {
         "tags" : [ "Auth" ],
         "summary" : "Get authentication info from token",
-        "security" : [ "jwt_auth" ],
+        "security" : [ {
+          "jwt_auth" : [ "all" ]
+        } ],
         "responses" : {
           "200" : {
             "description" : "Successful operation",
@@ -650,7 +652,7 @@
   "components" : {
     "securitySchemes" : {
       "jwt_auth" : {
-        "description" : "",
+        "description" : "Example value: 'Authorization: Bearer <jwt_token>",
         "type" : "apiKey",
         "name" : "Authorization",
         "in" : "header"
