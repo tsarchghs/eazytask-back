@@ -1,0 +1,1029 @@
+{
+  "openapi" : "3.0.1",
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/gjergjk71/easytask/1.0.1-oas3"
+  }, {
+    "description" : "In development",
+    "url" : "http://eazytask-back.herokuapp.com/api/v1"
+  }, {
+    "description" : "Works only in self-hosted",
+    "url" : "http://localhost:4000/api/v1"
+  } ],
+  "info" : {
+    "description" : "Eazytask API Specification<br> <h3>Notes for API consumers:</h3><br> <ul> <li>readOnly - Declares the property as \"read only\". This means that it MAY be sent as part of a response but SHOULD NOT be sent as part of the request.</li> <li>writeOnly - Declares the property as \"write only\". Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response.</li> </ul>",
+    "version" : "1.0.1-oas3",
+    "title" : "Eazytask API"
+  },
+  "tags" : [ {
+    "name" : "Users",
+    "description" : "User related API endpoints"
+  }, {
+    "name" : "Taskers",
+    "description" : "Tasker related API endpoints"
+  }, {
+    "name" : "Tasks",
+    "description" : "Task related API endpoints"
+  }, {
+    "name" : "Offers",
+    "description" : "Offer related API endpoints"
+  }, {
+    "name" : "Auth",
+    "description" : "Auth related API endpoints"
+  } ],
+  "paths" : {
+    "/users" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "Create a new User",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "first_name", "last_name", "email", "password" ],
+                "properties" : {
+                  "first_name" : {
+                    "type" : "string"
+                  },
+                  "last_name" : {
+                    "type" : "string"
+                  },
+                  "email" : {
+                    "type" : "string",
+                    "format" : "email"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/User"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}" : {
+      "patch" : {
+        "tags" : [ "Users" ],
+        "summary" : "Update a User",
+        "description" : "Perform a partial update on an user object by specifying the fields to update and their respective values",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "User ID",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "allOf" : [ {
+                  "$ref" : "#/components/schemas/User"
+                }, {
+                  "type" : "object",
+                  "properties" : {
+                    "tasker_id" : {
+                      "readOnly" : true
+                    }
+                  }
+                } ]
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/User"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taskers" : {
+      "post" : {
+        "tags" : [ "Taskers" ],
+        "summary" : "Create a new tasker object",
+        "description" : "user_id is not required since it will be taken from authentication token",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "area_of_activity" ],
+                "properties" : {
+                  "area_of_activity" : {
+                    "type" : "string"
+                  },
+                  "languages" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  },
+                  "skills" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/Tasker"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks" : {
+      "get" : {
+        "tags" : [ "Tasks" ],
+        "summary" : "Get all tasks",
+        "description" : "Description...",
+        "operationId" : "get_tasks",
+        "parameters" : [ {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "Specify extra fields you need to fetch other than the default ones which will always be fetched.",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "default" : [ ],
+              "enum" : [ "user", "offers" ]
+            }
+          }
+        }, {
+          "name" : "category_id",
+          "in" : "query",
+          "description" : "Filters tasks by category id",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "due_date",
+          "in" : "query",
+          "description" : "Filters tasks by due date",
+          "schema" : {
+            "type" : "string",
+            "format" : "date"
+          }
+        }, {
+          "name" : "expire_soon",
+          "in" : "query",
+          "description" : "Filters tasks that expire soon",
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "name" : "min_budget",
+          "in" : "query",
+          "description" : "Filter by minimum budget",
+          "schema" : {
+            "type" : "number",
+            "format" : "float"
+          }
+        }, {
+          "name" : "max_budget",
+          "in" : "query",
+          "description" : "Filter by maximum budget",
+          "schema" : {
+            "type" : "number",
+            "format" : "float"
+          }
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "description" : "Search by title",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/Task"
+                        }
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Tasks" ],
+        "summary" : "Create a new Task",
+        "operationId" : "create_task",
+        "parameters" : [ {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "Specify extra fields you need to fetch other than the default ones which will always be fetched.",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "default" : [ ],
+              "enum" : [ "user", "offers" ]
+            }
+          }
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Task"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/Task"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{taskId}" : {
+      "get" : {
+        "tags" : [ "Tasks" ],
+        "summary" : "Get Task by ID",
+        "operationId" : "get_task",
+        "parameters" : [ {
+          "name" : "taskId",
+          "in" : "path",
+          "description" : "Task ID",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "Specify extra fields you need to fetch other than the default ones which will always be fetched.",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "default" : [ ],
+              "enum" : [ "user", "offers" ]
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/Task"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{taskId}/qa" : {
+      "get" : {
+        "tags" : [ "Tasks" ],
+        "summary" : "Get Task questions/answers by task ID",
+        "operationId" : "get_task_qa",
+        "parameters" : [ {
+          "name" : "taskId",
+          "in" : "path",
+          "description" : "Task ID",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "type" : "object",
+                        "properties" : {
+                          "questions" : {
+                            "type" : "array",
+                            "items" : {
+                              "allOf" : [ {
+                                "$ref" : "#/components/schemas/Question"
+                              }, {
+                                "type" : "object"
+                              }, {
+                                "properties" : {
+                                  "answers" : {
+                                    "type" : "array",
+                                    "items" : {
+                                      "$ref" : "#/components/schemas/Answer"
+                                    }
+                                  }
+                                }
+                              } ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Get authentication info",
+        "description" : "Get authentication info by providing user credentials",
+        "operationId" : "post_auth",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "password" ],
+                "properties" : {
+                  "email" : {
+                    "type" : "string",
+                    "format" : "email"
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "minimum" : 6
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "type" : "object",
+                        "properties" : {
+                          "token" : {
+                            "type" : "string",
+                            "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTU4NzEyOTc1NH0.8vPXnUblMKfh4G2_-PMNRXm3QF3zwUToYa5OqSnl99g"
+                          },
+                          "user" : {
+                            "$ref" : "#/components/schemas/User"
+                          },
+                          "expires_in" : {
+                            "type" : "integer",
+                            "example" : 10000
+                          }
+                        }
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Get authentication info from token",
+        "security" : [ {
+          "jwt_auth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "type" : "object",
+                        "properties" : {
+                          "token" : {
+                            "type" : "string",
+                            "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTU4NzEyOTc1NH0.8vPXnUblMKfh4G2_-PMNRXm3QF3zwUToYa5OqSnl99g"
+                          },
+                          "user" : {
+                            "$ref" : "#/components/schemas/User"
+                          },
+                          "expires_in" : {
+                            "type" : "integer",
+                            "example" : 10000
+                          }
+                        }
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offers" : {
+      "post" : {
+        "tags" : [ "Offers" ],
+        "summary" : "Create a new Offer",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "task_id", "amount" ],
+                "properties" : {
+                  "task_id" : {
+                    "type" : "integer",
+                    "format" : "int64"
+                  },
+                  "amount" : {
+                    "type" : "number",
+                    "format" : "float"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/Offer"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offers/accept/{offerId}" : {
+      "post" : {
+        "tags" : [ "Offers" ],
+        "summary" : "[AKSER] Accept an offer",
+        "parameters" : [ {
+          "name" : "offerId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/Offer"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "securitySchemes" : {
+      "jwt_auth" : {
+        "description" : "Example value: \"Bearer <jwt_token>\"",
+        "type" : "apiKey",
+        "name" : "Authorization",
+        "in" : "header"
+      }
+    },
+    "schemas" : {
+      "User" : {
+        "type" : "object",
+        "required" : [ "id", "email", "password", "first_name", "last_name", "notification_option", "isAdmin", "createdAt" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "readOnly" : true
+          },
+          "tasker_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "email" : {
+            "type" : "string",
+            "format" : "email"
+          },
+          "password" : {
+            "type" : "string"
+          },
+          "first_name" : {
+            "type" : "string"
+          },
+          "last_name" : {
+            "type" : "string"
+          },
+          "gender" : {
+            "type" : "string"
+          },
+          "date_of_birth" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "short_biography" : {
+            "type" : "string"
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "profile_image" : {
+            "type" : "string"
+          },
+          "notification_option" : {
+            "type" : "string",
+            "enum" : [ "SMS", "EMAIL" ]
+          },
+          "isAdmin" : {
+            "type" : "boolean",
+            "readOnly" : true
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date",
+            "readOnly" : true
+          }
+        }
+      },
+      "Tasker" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "readOnly" : true
+          },
+          "user_id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "readOnly" : true
+          },
+          "area_of_activity" : {
+            "type" : "string"
+          },
+          "offers" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Offer"
+            }
+          },
+          "languages" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Language"
+            }
+          },
+          "ratings" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Rating"
+            }
+          },
+          "skills" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Skill"
+            }
+          },
+          "tasks" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Task"
+            }
+          }
+        }
+      },
+      "Task" : {
+        "type" : "object",
+        "required" : [ "id", "category_id", "user_id", "title", "description", "due_date_type", "due_date", "location", "expected_price", "status" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "readOnly" : true
+          },
+          "category_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "user_id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "readOnly" : true
+          },
+          "user" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/User"
+            }, {
+              "type" : "object",
+              "description" : "readOnly",
+              "readOnly" : true
+            } ]
+          },
+          "offers" : {
+            "readOnly" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Offer"
+            }
+          },
+          "offers_range" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "tasker_id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "readOnly" : true
+          },
+          "thumbnail" : {
+            "type" : "string",
+            "format" : "path"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "due_date_type" : {
+            "type" : "string",
+            "enum" : [ "FIXED_DATE", "UNTIL_DATE" ]
+          },
+          "due_date" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "location" : {
+            "type" : "string"
+          },
+          "expected_price" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "status" : {
+            "type" : "string",
+            "readOnly" : true,
+            "enum" : [ "ACTIVE", "DEACTIVATED", "CLOSED" ]
+          }
+        }
+      },
+      "Offer" : {
+        "type" : "object",
+        "required" : [ "id", "task_id", "tasker_id", "amount", "description", "status" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "task_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "tasker_id" : {
+            "type" : "integer",
+            "format" : "int6",
+            "readOnly" : true
+          },
+          "amount" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string",
+            "readOnly" : true,
+            "enum" : [ "ACTIVE", "DEACTIVATED" ]
+          }
+        }
+      },
+      "Language" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Skill" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Rating" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "rating_type" : {
+            "type" : "string",
+            "enum" : [ "ASKER_TO_TASKER", "TASKER_TO_ASKER" ]
+          },
+          "user_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "tasker_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "punctuality" : {
+            "type" : "number",
+            "format" : "float",
+            "minimum" : 1,
+            "maximum" : 5
+          },
+          "accuracy" : {
+            "type" : "number",
+            "format" : "float",
+            "minimum" : 1,
+            "maximum" : 5
+          },
+          "quality" : {
+            "type" : "number",
+            "format" : "float",
+            "minimum" : 1,
+            "maximum" : 5
+          },
+          "friendliness" : {
+            "type" : "number",
+            "format" : "float",
+            "minimum" : 1,
+            "maximum" : 5
+          },
+          "cleanliness" : {
+            "type" : "number",
+            "format" : "float",
+            "minimum" : 1,
+            "maximum" : 5
+          },
+          "review" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Question" : {
+        "type" : "object",
+        "properties" : {
+          "task_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "user_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Answer" : {
+        "type" : "object",
+        "properties" : {
+          "question_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "user_id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Category" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ApiResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "success"
+          },
+          "message" : {
+            "type" : "string",
+            "example" : "Successful operation"
+          },
+          "code" : {
+            "type" : "integer",
+            "example" : 200
+          },
+          "data" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
