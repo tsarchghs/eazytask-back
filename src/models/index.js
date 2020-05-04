@@ -17,7 +17,7 @@ if (process.env.IN_TRAVIS){
     process.env.MYSQL_HOST = "localhost"
 }
 
-console.log(process.env.IN_TRAVIS, process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD,919)
+console.log(process.env.IN_TRAVIS, process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD,process.env.CLEARDB_DATABASE_URL,919)
 
 let sequelize;
 if (process.env.CLEARDB_DATABASE_URL){
@@ -54,5 +54,8 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+
+console.log("CONNECTED TO ", db.sequelize.config.database)
 
 module.exports = db;

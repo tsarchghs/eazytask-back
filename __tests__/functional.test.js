@@ -8,11 +8,12 @@ const app = require("../src/app")
 const agent = request(app);
 const  models = require("../src/models")
 
-jest.setTimeout(5000);
+jest.setTimeout(25000);
 
 let cases = [...users_cases, ...auth_cases]
 
-beforeAll(async () => {
+beforeAll(async done => {
+    await models.sequelize.query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true })
     await models.sequelize.sync({ force: true });
     await models.User.create({
         "first_name": "string",
@@ -22,6 +23,7 @@ beforeAll(async () => {
         "isAdmin": false,
         "notification_option": "EMAIL"
     })
+    done()
 })
 
 cases.forEach(case_ => {

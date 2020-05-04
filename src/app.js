@@ -1,9 +1,9 @@
 if (!process.env.CUSTOM_ENV_PATH) require('dotenv').config()
-console.log("CONNECTED TO ",process.env.MYSQL_DATABASE)
+
 require('express-async-errors');
 
 const models = require("./models")
-if (process.env.DROP_TABLES) models.sequelize.drop()
+// if (process.env.DROP_TABLES) models.sequelize.drop()
 models.sequelize.sync({ force: false });
 
 const express = require('express')
