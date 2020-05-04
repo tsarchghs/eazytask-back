@@ -520,7 +520,7 @@
         "tags" : [ "Auth" ],
         "summary" : "Get authentication info from token",
         "security" : [ {
-          "jwt_auth" : [ "all" ]
+          "jwt_auth" : [ "basic_user" ]
         } ],
         "responses" : {
           "200" : {
