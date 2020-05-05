@@ -7,3 +7,11 @@
   <li><code>npm start</code></li>
 </ul>
 <h5>Run tests: <code>npm run test</code></h5>
+
+
+# src/lib docs
+
+Rules:
+- `{resource}-api` will contain everything needed by the API's implemented in said folder
+  - Refer to the currently implemented API's to use the same patterns
+- `{rosource-dal}` will contain every DAL function related to {resource} that is used in more than one lib
