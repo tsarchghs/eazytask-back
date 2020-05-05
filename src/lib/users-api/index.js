@@ -2,7 +2,7 @@
 const express = require("express");
 const app = module.exports = express();
 
-const validateRequest = require("../../middlewares/validateRequest");
+const { validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
 
 const { post_users, patch_users } = require("./validations")
 const { createUser, patchUser } = require("./users-dal")
@@ -30,8 +30,13 @@ app.get("/users/:userId", async (req, res) => {
 
 app.post("/users/:userId", upload.single("profile_image"),(req,res) => res.send(JSON.stringify([req.file,1])))
 
-app.patch("/users/:userId", [validateRequest(patch_users), upload.single("profile_image")], async (req,res) => {
-    console.log(req.body, req.file, req.files)
+app.patch("/users/:userId", 
+    [
+        validateRequest(patch_users), 
+        upload.single("profile_image"),
+        jwtRequired,
+        passUserFromJWT
+    ], async (req,res) => {
     let user = await patchUser(req.params.userId, { ...req.body, profile_image: req.file });
     return res.json({
         message: "success",
