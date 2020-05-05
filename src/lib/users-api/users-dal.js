@@ -5,8 +5,11 @@ const bcrypt = require("bcrypt")
 const { SALT_ROUNDS } = require("../../configs")
 const { ErrorHandler } = require("../../utils/error")
 
+const { findUserByPk } = require("../users-dal");
+const uploadFile = require("../aws/uploadFile");
+
 module.exports = {
-    createUser: async (user) => {
+    createUser: async user => {
         if (!user.notification_option) user.notification_option = "EMAIL"
         let createdUser;
 
@@ -22,5 +25,12 @@ module.exports = {
         createdUser.password = undefined
         return createdUser
     },
+    patchUser: async (id,patchFields) => {
+        let user = await findUserByPk(id)
+        if (!user) throw ErrorHandler(404, "The resource you tried to update does not exist")
+        if (patchFields.password) throw new Error("To be decided if we go for confirm password or not.")
+        if (patchFields.profile_image) patchFields.profile_image = await uploadFile(patchFields.profile_image)
+        return await user.update({ ...patchFields, id: undefined })
+    }
 
 }
