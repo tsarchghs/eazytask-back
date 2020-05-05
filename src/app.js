@@ -7,6 +7,7 @@ const models = require("./models")
 models.sequelize.sync({ force: false });
 
 const express = require('express')
+const cors = require("cors")
 const compression = require("compression");
 const bodyParser = require("body-parser")
 const logger = require("morgan")("dev")
@@ -18,6 +19,7 @@ const auth_api = require("./lib/auth-api")
 
 const app = express();
 
+app.use(cors())
 app.use(compression())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
