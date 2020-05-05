@@ -5,7 +5,7 @@ const app = module.exports = express();
 const validateRequest = require("../../middlewares/validateRequest");
 
 const { post_users } = require("./validations")
-const { createUser } = require("../users-dal")
+const { createUser } = require("./users-dal")
 
 app.post("/users", validateRequest(post_users), async (req,res) => {
     let user = await createUser(req.body);
