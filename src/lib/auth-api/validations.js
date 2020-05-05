@@ -5,7 +5,7 @@ module.exports = {
     post_auth: yup.object().shape({
         requestBody: yup.object().shape({
             email: yup.string().email().required(),
-            password
+            password: password.required()
         }).required()
     })
 }
