@@ -39,6 +39,7 @@ module.exports = [
         path: "/auth",
         request: getPostRequest({}),
         response: {
+            "status": "error",
             "message": "Validation error",
             "code": 403,
             "errors": [
@@ -56,6 +57,7 @@ module.exports = [
             "email": "existing_test_email"
         }),
         response: {
+            "status": "error",
             "message": "Validation error",
             "code": 403,
             "errors": [

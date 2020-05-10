@@ -6,11 +6,22 @@ const auth_cases = require("./meta/auth");
 const request = require('supertest');
 const app = require("../src/app")
 const agent = request(app);
-const  models = require("../src/models")
+const models = require("../src/models")
 
 jest.setTimeout(25000);
 
 let cases = [...users_cases, ...auth_cases]
+
+let sortObj = obj => {
+    // used for sorting to object and comparing after both are stringified, this way
+    // we don't get !== when it's not the same order of keys but still get the nice string difference result of jest
+    let keys = Object.keys(obj).sort();
+    let new_obj = {}
+    keys.forEach(k => {
+        new_obj[k] = obj[k]
+    })
+    return new_obj
+}
 
 beforeAll(async done => {
     await models.sequelize.query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true })
@@ -34,7 +45,6 @@ cases.forEach(case_ => {
                                     .set("Content-Type",case_.request.headers["Content-Type"] || "")
                                     .set("Authorization",case_.request.headers["Authorization"] || "")
                                     .send(case_.request.body)
-            // expect(res.header["content-type"]).toBe("application/json; charset=utf-8")
             let data = JSON.parse(res.text)
             if (case_.before) await case_.before()
             case_.request.body = JSON.stringify(case_.request.body)
@@ -61,8 +71,8 @@ cases.forEach(case_ => {
                 })
             }
 
-            expect(JSON.stringify(data))
-                .toBe(JSON.stringify(case_.response))
+            expect(JSON.stringify(sortObj(data)))
+                .toBe(JSON.stringify(sortObj(case_.response)))
             
             done();
         })
