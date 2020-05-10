@@ -19,15 +19,6 @@ app.post("/users", validateRequest(post_users), async (req,res) => {
     })
 })
 
-app.get("/users/:userId", async (req, res) => {
-    return res.send(`
-        <form method="post" enctype="multipart/form-data" action="/api/v1/users/${req.params.userId}">
-            <input type="file" id="profile_image_id" name="profile_image"/>
-            <button type="submit">Submit</button>
-        </form>
-    `)      
-})
-
 app.post("/users/:userId", upload.single("profile_image"),(req,res) => res.send(JSON.stringify([req.file,1])))
 
 app.patch("/users/:userId", 
@@ -37,10 +28,11 @@ app.patch("/users/:userId",
         jwtRequired,
         passUserFromJWT
     ], async (req,res) => {
-    let user = await patchUser(req.params.userId, { ...req.body, profile_image: req.file });
-    return res.json({
-        message: "success",
-        code: 200,
-        data: user
-    })
+        if (req.user.id !== req.params.userId) throw new ErrorHandler(401, "Unauthorized")
+        let user = await patchUser(req.params.userId, { ...req.body, profile_image: req.file });
+        return res.json({
+            message: "success",
+            code: 200,
+            data: user
+        })
 })
