@@ -2,7 +2,7 @@
 const { ErrorHandler, handleError } = require("../utils/error");
 
 module.exports = (err, req, res, next) => {
-    console.log(err,900,JSON.stringify(err))
+    console.log(err,900,JSON.stringify(err),err instanceof ErrorHandler)
     console.log("----------------------------------------------")
     if (err instanceof ErrorHandler) return handleError(err, res);
     else if (err.name === 'UnauthorizedError') {
