@@ -11,5 +11,11 @@ module.exports = (sequelize, DataTypes) => {
         description: NonNullString(DataTypes.STRING),
         status: NonNullStatusField(DataTypes.ENUM)
     })
+
+    Offer.associate = models => {
+        Offer.belongsTo(models.Tasker);
+        Offer.belongsTo(models.Task);
+    }
+
     return Offer;
 }
