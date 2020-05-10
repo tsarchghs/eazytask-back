@@ -4,7 +4,7 @@ require('express-async-errors');
 
 const models = require("./models")
 // if (process.env.DROP_TABLES) models.sequelize.drop()
-models.sequelize.sync({ force: false });
+models.sequelize.sync({ force: true });
 
 const express = require('express')
 const cors = require("cors")
@@ -14,8 +14,13 @@ const logger = require("morgan")("dev")
 const { errorHandler, caseInsensitiveEmail } = require("./middlewares")
 
 const api_docs = require("./lib/api-docs")
-const users_api = require("./lib/users-api")
 const auth_api = require("./lib/auth-api")
+const users_api = require("./lib/users-api")
+const tasks_api = require("./lib/tasks-api")
+const categories_api = require("./lib/categories-api")
+const languages_api = require("./lib/languages-api")
+const skills_api = require("./lib/skills-api")
+const taskers_api = require("./lib/taskers-api");
 
 const app = express();
 
@@ -27,8 +32,13 @@ app.use(logger)
 app.use(caseInsensitiveEmail)
 
 app.use("/api/v1",api_docs)
-app.use("/api/v1", users_api)
 app.use("/api/v1", auth_api)
+app.use("/api/v1", users_api)
+app.use("/api/v1", tasks_api)
+app.use("/api/v1", taskers_api)
+app.use("/api/v1", categories_api)
+app.use("/api/v1", languages_api)
+app.use("/api/v1", skills_api)
 
 // app.use("/api/v1",MainRouter)
 app.get('/', (req, res) => res.json({test:true}))
