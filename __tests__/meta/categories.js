@@ -36,7 +36,7 @@ module.exports = [
     {
         id: "categories_3",
         title: "[3] POST /categories with body and admin access",
-        description: "Return errors",
+        description: "Return created category",
         path: "/categories",
         request: {
             headers: { Accept: "application/json", "Content-Type": "application/json" },
@@ -50,29 +50,67 @@ module.exports = [
             "data": {
                 "id": 1,
                 "name": "new-category-name",
+                "createdByUser": false
             }
         },
         lazyFieldValidation: ["data.updatedAt", "data.createdAt"]
     },
-    // {
-    //     id: "categories_4",
-    //     title: "[4] POST /categories with body and admin access",
-    //     description: "Return errors",
-    //     path: "/categories",
-    //     request: {
-    //         headers: { Accept: "application/json", "Content-Type": "application/json" },
-    //         method: "GET",
-    //     },
-    //     response: {
-    //         "message": "success",
-    //         "status": 200,
-    //         "data": [
-    //             {
-    //                 "id": 1,
-    //                 "name": "new-category-name",
-    //             }
-    //         ]
-    //     },
-    //     lazyFieldValidation: ["data.[item].updatedAt", "data.[item].createdAt"]
-    // },
+    {
+        id: "categories_4",
+        title: "[4] POST /categories with duplicate name and admin access",
+        description: "Return created category",
+        path: "/categories",
+        request: {
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            method: "POST",
+            body: { name: "new-category-name" },
+            fromAdmin: true
+        },
+        before: async models => {
+            while (true) {
+                console.log("[Category] SEARCHIN....")
+                let categories = await models.Category.findAll()
+                if (categories.length) break;
+            }
+            return;
+        },
+        response: {
+            "status": "error",
+            "code": 409,
+            "message": "Cannot create resource because it conflicts with the current state of the server.",
+            "errors": [
+                "category.name must be unique"
+            ]
+        },
+    },
+    {
+        id: "categories_5",
+        title: "[5] GET /categories",
+        description: "Return list of categories",
+        path: "/categories",
+        request: {
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            method: "GET",
+        },
+        before: async models => {
+            while (true){
+                console.log("[Category] SEARCHIN....")
+                let categories = await models.Category.findAll()
+                if (categories.length) break;
+            }
+            return;
+        },
+        response: {
+            "message": "success",
+            "status": 200,
+            "data": [
+                {
+                    "id": 1,
+                    "name": "new-category-name",
+                    "createdByUser": false
+                }
+            ]
+        },
+        lazyFieldValidation: ["data.[item].updatedAt", "data.[item].createdAt"]
+    },
 ]

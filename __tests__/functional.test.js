@@ -3,6 +3,8 @@
 const users_cases = require("./meta/users");
 const auth_cases = require("./meta/auth");
 const categories_cases = require("./meta/categories");
+const languages_cases = require("./meta/languages");
+const skills_cases = require("./meta/skills");
 
 const request = require('supertest');
 const app = require("../src/app")
@@ -17,7 +19,9 @@ jest.setTimeout(25000);
 let cases = [
     ...users_cases, 
     ...auth_cases,
-    ...categories_cases
+    ...categories_cases,
+    ...languages_cases,
+    ...skills_cases
 ]
 
 let sortObj = obj => {
@@ -72,10 +76,11 @@ cases.forEach(case_ => {
                                     .set("Authorization",Authorization)
                                     .send(case_.request.body)
             let data = JSON.parse(res.text)
-            if (case_.before) await case_.before()
+            if (case_.before) await case_.before(models)
             case_.request.body = JSON.stringify(case_.request.body)
             
-            console.log({ lazyField: case_.lazyFieldValidation }, 99919, 99919, 99919, 99919, 99919)
+            if (case_.lazyFieldValidation && case_.lazyFieldValidation[0].split(".")[1] === "[item]")
+                console.log({ lazyField: case_.lazyFieldValidation }, 99919, 99919, 99919, 99919, 99919)
             if (case_.lazyFieldValidation) lazyFieldValidation(case_.lazyFieldValidation,data)
 
             expect(JSON.stringify(sortObj(data)))
