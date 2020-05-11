@@ -24,7 +24,6 @@ const taskers_api = require("./lib/taskers-api");
 
 const app = express();
 
-app.use(cors({ origin: "*"}));
 app.use(compression())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -39,6 +38,8 @@ app.use("/api/v1", taskers_api)
 app.use("/api/v1", categories_api)
 app.use("/api/v1", languages_api)
 app.use("/api/v1", skills_api)
+
+app.use(cors({ origin: "*" }));
 
 // app.use("/api/v1",MainRouter)
 app.get('/', (req, res) => res.json({test:true}))
