@@ -4,6 +4,7 @@ const caseInsensitiveEmail = require("./caseInsensitiveEmail")
 const jwtRequired = require("./jwtRequired")
 const passUserFromJWT = require("./passUserFromJWT")
 const requireAdminAccess = require("./requireAdminAccess")
+const allowCrossDomain = require("./allowCrossDomain");
 
 module.exports = {
     errorHandler,
@@ -11,5 +12,6 @@ module.exports = {
     caseInsensitiveEmail,
     jwtRequired,
     passUserFromJWT,
-    requireAdminAccess
+    requireAdminAccess, 
+    allowCrossDomain
 }
