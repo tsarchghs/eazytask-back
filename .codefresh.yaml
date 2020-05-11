@@ -1,0 +1,20 @@
+version: '1.0'
+steps:
+    main_clone:
+        title: 'Cloning main repository...'
+        type: git-clone
+        repo: 'gjergjk71/eazytask-back' #'${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+        revision: '${{CF_REVISION}}'
+        git: github-1
+
+    unit_test:
+      title: eazytask-back
+      image: node:10
+      commands:
+        - echo "My Node version is"
+        - node --version
+        - npm install 
+        - npm install -g jest
+        - npm run dev
+      enviroment:
+        - CLEARDB_DATABASE_URL="mysql://b277ea0b9ba8ec:a59dbc99@eu-cdbr-west-03.cleardb.net/heroku_876dce7fefe2047"
