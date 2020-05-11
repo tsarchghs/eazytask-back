@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     let User = sequelize.define('User', {
         email: NonNullUniqueString(DataTypes.STRING),
         password: {
-            ...NonNullUniqueString(DataTypes.STRING),
+            ...NonNullString(DataTypes.STRING),
         },
         first_name: NonNullString(DataTypes.STRING),
         last_name: NonNullString(DataTypes.STRING),
