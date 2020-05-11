@@ -1,12 +1,5 @@
 
-let getPostRequest = body => ({
-    body,
-    headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    },
-    method: "POST"
-})
+const getPostRequest = require("../utils/getPostRequest");
 
 let GET_POST_AUTH_RES = {
     "status": "success",
@@ -39,6 +32,7 @@ module.exports = [
         path: "/auth",
         request: getPostRequest({}),
         response: {
+            "status": "error",
             "message": "Validation error",
             "code": 403,
             "errors": [
@@ -56,6 +50,7 @@ module.exports = [
             "email": "existing_test_email"
         }),
         response: {
+            "status": "error",
             "message": "Validation error",
             "code": 403,
             "errors": [

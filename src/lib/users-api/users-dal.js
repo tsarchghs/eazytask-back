@@ -29,6 +29,7 @@ module.exports = {
         let user = await findUserByPk(id)
         if (!user) throw ErrorHandler(404, "The resource you tried to update does not exist")
         if (patchFields.password) throw new Error("To be decided if we go for confirm password or not.")
+        else patchFields.password = undefined // in case it's an empty string
         if (patchFields.profile_image) patchFields.profile_image = await uploadFile(patchFields.profile_image)
         return await user.update({ ...patchFields, id: undefined })
     }
