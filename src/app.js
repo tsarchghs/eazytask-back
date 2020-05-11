@@ -24,13 +24,17 @@ const taskers_api = require("./lib/taskers-api");
 
 const app = express();
 
+
 app.use(compression())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(logger)
 app.use(caseInsensitiveEmail)
 
-app.use("/api/v1",api_docs)
+let appInstances = [app, api_docs, auth_api, users_api, tasks_api, categories_api, languages_api, skills_api, taskers_api];
+appInstances.forEach(a => a.use(cors({ origin: "*" })))
+
+app.use("/api/v1", api_docs)
 app.use("/api/v1", auth_api)
 app.use("/api/v1", users_api)
 app.use("/api/v1", tasks_api)
@@ -39,7 +43,6 @@ app.use("/api/v1", categories_api)
 app.use("/api/v1", languages_api)
 app.use("/api/v1", skills_api)
 
-app.use(cors({ origin: "*" }));
 
 // app.use("/api/v1",MainRouter)
 app.get('/', (req, res) => res.json({test:true}))
