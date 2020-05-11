@@ -1,12 +1,5 @@
 
-let getPostRequest = body => ({
-    body,
-    headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    },
-    method: "POST"
-})
+const getPostRequest = require("../utils/getPostRequest");
 
 let GET_POST_AUTH_RES = {
     "status": "success",

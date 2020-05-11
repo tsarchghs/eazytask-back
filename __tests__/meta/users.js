@@ -1,13 +1,6 @@
 // let { User } = require("../../src/models")[process.env.MYSQL_DATABASE_TESTING] 
 
-let getPostRequest = body => ({
-    body,
-    headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-    },
-    method: "POST"
-})
+const getPostRequest = require("../utils/getPostRequest");
 
 module.exports = [
     {
