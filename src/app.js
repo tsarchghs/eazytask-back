@@ -4,7 +4,7 @@ require('express-async-errors');
 
 const models = require("./models")
 if (process.env.DROP_TABLES_HEROKU) models.sequelize.drop()
-models.sequelize.sync({ force: false || process.env.DROP_TABLES_HEROKU });
+models.sequelize.sync({ force: true || process.env.DROP_TABLES_HEROKU });
 
 const express = require('express')
 const cors = require("cors")
