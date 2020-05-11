@@ -25,6 +25,7 @@ const taskers_api = require("./lib/taskers-api");
 const app = express();
 
 app.use(cors())
+app.options('*', cors());
 app.use(compression())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
