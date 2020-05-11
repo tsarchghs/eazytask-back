@@ -11,7 +11,7 @@ const cors = require("cors")
 const compression = require("compression");
 const bodyParser = require("body-parser")
 const logger = require("morgan")("dev")
-const { errorHandler, caseInsensitiveEmail, allowCrossDomain, allowCrossDomain } = require("./middlewares")
+const { errorHandler, caseInsensitiveEmail, allowCrossDomain } = require("./middlewares")
 
 const api_docs = require("./lib/api-docs")
 const auth_api = require("./lib/auth-api")
