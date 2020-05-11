@@ -24,12 +24,20 @@ const taskers_api = require("./lib/taskers-api");
 
 const app = express();
 
+const allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'example.com');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
 
 app.use(compression())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(logger)
 app.use(caseInsensitiveEmail)
+app.use(allowCrossDomain)
 
 let appInstances = [app, api_docs, auth_api, users_api, tasks_api, categories_api, languages_api, skills_api, taskers_api];
 appInstances.forEach(a => a.use(cors({ origin: "*" })))
