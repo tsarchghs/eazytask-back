@@ -24,7 +24,7 @@ app.post("/categories",[
     passUserFromJWT,
     requireAdminAccess
 ], async (req, res) => {
-    let category = await createCategory({name: req.body.name})
+    let category = await createCategory({name: req.body.name, createdByUser: false})
     return res.json({
         message: "success",
         status: 200,

@@ -23,7 +23,7 @@ app.post("/skills",[
     passUserFromJWT,
     requireAdminAccess
 ], async (req, res) => {
-    let skill = await createSkill(req.body.name,false)
+    let skill = await createSkill({ name: req.body.name, createdByUser: false})
     return res.json({
         message: "success",
         status: 200,

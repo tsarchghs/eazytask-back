@@ -11,7 +11,7 @@ const cors = require("cors")
 const compression = require("compression");
 const bodyParser = require("body-parser")
 const logger = require("morgan")("dev")
-const { errorHandler, caseInsensitiveEmail } = require("./middlewares")
+const { errorHandler, caseInsensitiveEmail, allowCrossDomain } = require("./middlewares")
 
 const api_docs = require("./lib/api-docs")
 const auth_api = require("./lib/auth-api")
@@ -23,14 +23,6 @@ const skills_api = require("./lib/skills-api")
 const taskers_api = require("./lib/taskers-api");
 
 const app = express();
-
-const allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header("Access-Control-Allow-Headers", "Origin, Accept, Authorization, Content-Type, Access-Control-Allow-Headers, X-Requested-With");
-
-    next();
-}
 
 app.use(compression())
 app.use(bodyParser.urlencoded({ extended: true }))
