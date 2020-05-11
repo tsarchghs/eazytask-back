@@ -15,6 +15,7 @@ const getModelsFromFIelds = fields => fields ? fields.split(",").map(x => {
     throw new ErrorHandler(403,"Validation error", [`query.fields does not support ${x}`])
 }) : [];
 
+
 module.exports = {
     findAll: async (filters) => {
         let where = filters;
@@ -39,6 +40,7 @@ module.exports = {
         user_id,
         category_id,
         thumbnail,
+        gallery,
         title,
         description,
         due_date_type,
@@ -47,11 +49,19 @@ module.exports = {
         location
     }) => {
         let task;
+        if (gallery) {
+            let gallery_file_urls = []
+            for (file of gallery) {
+                let url = await uploadFile(file)
+                gallery_file_urls.push(url);
+            }
+            gallery = gallery_file_urls.join(",")
+        }
         try {
             task = await Task.create({
                 UserId: user_id,
                 CategoryId: category_id,
-                thumbnail: thumbnail && await uploadFile(thumbnail),
+                thumbnail: thumbnail && await uploadFile(thumbnail), gallery,
                 title, description, due_date_type, due_date, expected_price, location, status: "ACTIVE"
             })
         } catch (err) {

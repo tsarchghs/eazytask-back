@@ -9,6 +9,7 @@ let options = {
 module.exports = (sequelize, DataTypes) => {
     let Task = sequelize.define("Task", {
         thumbnail: DataTypes.STRING,
+        gallery: DataTypes.TEXT,
         title: NonNullString(DataTypes.STRING),
         description: NonNullString(DataTypes.STRING),
         due_date_type: {
@@ -25,6 +26,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         status: NonNullStatusField(DataTypes.ENUM)
+    },{
+        getterMethods: {
+            formattedGallery() {
+                return this.gallery.split(",")
+            }
+        }
     })
     Task.associate = models => {
         Task.belongsTo(models.Category, options.opt1)

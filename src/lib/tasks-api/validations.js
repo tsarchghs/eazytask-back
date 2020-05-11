@@ -17,16 +17,7 @@ module.exports = {
     post_tasks: yup.object().shape({
         query: yup.object().shape({
             fields: yup.string()
-        }),
-        requestBody: yup.object().shape({
-            category_id: common.id.required(),
-            title: yup.string().required(),
-            location: yup.string().required(),
-            description: yup.string().required(),
-            due_date_type: yup.string().oneOf(["FIXED_DATE", "UNTIL_DATE"]).required(),
-            due_date: yup.date().required(),
-            expected_price: yup.number()
-        }).required()
+        })
     }),
     get_taskId: yup.object().shape({
         params: yup.object().shape({
@@ -38,5 +29,14 @@ module.exports = {
     }),
     get_taskId_qa: yup.object().shape({
         taskId: common.id.required(),
+    }),
+    post_tasks_requestBody: yup.object().shape({
+        category_id: common.id.required(),
+        title: yup.string().required(),
+        location: yup.string().required(),
+        description: yup.string().required(),
+        due_date_type: yup.string().oneOf(["FIXED_DATE", "UNTIL_DATE"]).required(),
+        due_date: yup.date().required(),
+        expected_price: yup.number()
     })
 }
