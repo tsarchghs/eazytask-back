@@ -7,7 +7,7 @@ let stringArray = yup.array().of(
 
 module.exports = {
     get_taskerId: yup.object().shape({
-        query: yup.object().shape({
+        params: yup.object().shape({
             taskerId: id.required()
         })
     }),

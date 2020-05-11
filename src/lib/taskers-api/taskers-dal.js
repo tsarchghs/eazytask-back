@@ -8,6 +8,7 @@ const { findLanguageByName, createLanguage } = require("../languages-dal");
 const { findSkillByName, createSkill } = require("../skills-dal");
 
 module.exports = {
+    findTaskerByPk: async id => (await Tasker.findByPk(id)),
     findOne: async userId => {
         let tasker = await Tasker.findOne({where:{"UserId": userId}});
         return tasker;

@@ -4,7 +4,7 @@ require('express-async-errors');
 
 const models = require("./models")
 // if (process.env.DROP_TABLES) models.sequelize.drop()
-models.sequelize.sync({ force: true });
+models.sequelize.sync({ force: false });
 
 const express = require('express')
 const cors = require("cors")
