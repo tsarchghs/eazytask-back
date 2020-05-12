@@ -1,10 +1,7 @@
 "use strict"
 
 const { NonNullString, NonNullStatusField } = require("./common")
-
-let options = {
-    opt1: { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-}
+const { Op } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
     let Task = sequelize.define("Task", {
@@ -14,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
         description: NonNullString(DataTypes.STRING),
         due_date_type: {
             type: DataTypes.ENUM("FIXED_DATE","UNTIL_DATE"),
-            allowNull: false
+            allowNull: true
         },
         due_date: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: true
         },
         location: NonNullString(DataTypes.STRING),
         expected_price: {
@@ -27,15 +24,31 @@ module.exports = (sequelize, DataTypes) => {
         },
         status: NonNullStatusField(DataTypes.ENUM)
     },{
+        defaultScope: {
+            where: {
+                status: {
+                    [Op.not]: "DELETED"
+                }
+            }
+        },
         getterMethods: {
             formattedGallery() {
+                if (!this.gallery) return undefined;
                 return this.gallery.split(",")
             }
         }
     })
     Task.associate = models => {
-        Task.belongsTo(models.Category, options.opt1)
-        Task.belongsTo(models.User, options.opt1)
+        Task.belongsTo(models.Category, { 
+            foreignKey: { 
+                allowNull: false 
+            },
+        })
+        Task.belongsTo(models.User, {
+            foreignKey: {
+                allowNull: false
+            }
+        })
         Task.hasMany(models.Question)
         Task.hasMany(models.Offer)
     }

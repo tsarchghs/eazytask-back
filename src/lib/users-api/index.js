@@ -17,11 +17,6 @@ const uploadMiddleware = upload.fields([
     { name: 'cover_image', maxCount: 1 }
 ])
 
-// const uploadMiddleware = upload.fields([
-//     { name: 'profile_image', maxCount: 1 }, 
-//     { name: 'gallery', maxCount: 8 }
-// ])
-
 app.post("/users", validateRequest(post_users), async (req,res) => {
     let user = await createUser(req.body);
     return res.json({
@@ -36,7 +31,7 @@ app.post("/users", validateRequest(post_users), async (req,res) => {
 app.patch("/users/:userId", 
     [
         validateRequest(patch_users), 
-        uploadMiddleware, // upload.single("profile_image"),
+        uploadMiddleware,
         jwtRequired,
         passUserFromJWT
     ], async (req,res) => {

@@ -11,7 +11,7 @@ const NonNullString = stringType => ({
 })
 
 const NonNullStatusField = enumType => ({
-    type: enumType("ACTIVE", "DEACTIVATED", "ACCEPTED"),
+    type: enumType("ACTIVE", "DEACTIVATED", "ACCEPTED", "DELETED"),
     default: "ACTIVE",
     allowNull: false
 })

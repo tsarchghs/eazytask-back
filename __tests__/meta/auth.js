@@ -17,6 +17,7 @@ let GET_POST_AUTH_RES = {
             "city": null,
             "address": null,
             "profile_image": null,
+            "cover_image": null,
             "notification_option": "EMAIL",
             "isAdmin": false
         },

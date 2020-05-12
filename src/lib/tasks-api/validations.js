@@ -14,11 +14,6 @@ module.exports = {
             title: yup.string()
         })
     }),
-    post_tasks: yup.object().shape({
-        query: yup.object().shape({
-            fields: yup.string()
-        })
-    }),
     get_taskId: yup.object().shape({
         params: yup.object().shape({
             taskId: common.id.required(),
@@ -28,15 +23,42 @@ module.exports = {
         })
     }),
     get_taskId_qa: yup.object().shape({
-        taskId: common.id.required(),
+        params: yup.object().shape({
+            taskId: common.id.required(),
+        })
+    }),
+    post_tasks: yup.object().shape({
+        query: yup.object().shape({
+            fields: yup.string()
+        })
     }),
     post_tasks_requestBody: yup.object().shape({
-        category_id: common.id.required(),
+        category: yup.string().required(),
         title: yup.string().required(),
         location: yup.string().required(),
         description: yup.string().required(),
         due_date_type: yup.string().oneOf(["FIXED_DATE", "UNTIL_DATE"]).required(),
         due_date: yup.date().required(),
         expected_price: yup.number()
+    }),
+    patch_tasks: yup.object().shape({
+        params: yup.object().shape({
+            taskId: common.id.required(),
+        })
+    }),
+    patch_tasks_requestBody: yup.object().shape({
+        category: yup.string(),
+        title: yup.string(),
+        location: yup.string(),
+        description: yup.string(),
+        due_date_type: yup.string().oneOf(["FIXED_DATE", "UNTIL_DATE"]),
+        due_date: yup.date(),
+        expected_price: yup.number(),
+        status: yup.string().oneOf(["ACTIVE", "DEACTIVATED", "ACCEPTED"])
+    }),
+    delete_tasks: yup.object().shape({
+        params: yup.object().shape({
+            taskId: yup.number().required()
+        })
     })
 }

@@ -32,15 +32,6 @@ module.exports = {
         else patchFields.password = undefined // in case it's an empty string
         if (patchFields.profile_image) patchFields.profile_image = await uploadFile(patchFields.profile_image)
         if (patchFields.cover_image) patchFields.cover_image = await uploadFile(patchFields.cover_image)
-        // if (patchFields.gallery) {
-        //     let gallery = patchFields.gallery;
-        //     let gallery_file_urls = []
-        //     for (file of gallery) {
-        //         let url = await uploadFile(patchFields.profile_image)
-        //         gallery_file_urls.push(url);
-        //     }
-        //     patchFields.gallery = gallery_file_urls.join(",")
-        // }
         return await user.update({ ...patchFields, id: undefined })
     }
 

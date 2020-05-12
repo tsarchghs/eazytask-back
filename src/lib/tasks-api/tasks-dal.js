@@ -4,6 +4,10 @@ const uploadFile = require("../aws/uploadFile");
 
 const { ErrorHandler } = require("../../utils/error");
 
+const { findOneByName, createCategory } = require("../categories-dal")
+
+const cloneDeep= require("../../utils/cloneDeep")
+
 const FIELD_MODEL = {
     user: User,
     offers: Offer,
@@ -29,7 +33,7 @@ module.exports = {
     findOne: async (taskId,options) => {
         let task = await Task.findOne({ 
             where: { id: taskId },
-            include: getModelsFromFIelds(options.fields),
+            include: options && getModelsFromFIelds(options.fields),
         })
         if (!task) {
             throw new ErrorHandler(404, "Not found", [`Task not found`])
@@ -38,7 +42,7 @@ module.exports = {
     },
     createTask: async ({
         user_id,
-        category_id,
+        category,
         thumbnail,
         gallery,
         title,
@@ -48,7 +52,6 @@ module.exports = {
         expected_price,
         location
     }) => {
-        let task;
         if (gallery) {
             let gallery_file_urls = []
             for (file of gallery) {
@@ -57,21 +60,48 @@ module.exports = {
             }
             gallery = gallery_file_urls.join(",")
         }
-        try {
-            task = await Task.create({
-                UserId: user_id,
-                CategoryId: category_id,
-                thumbnail: thumbnail && await uploadFile(thumbnail), gallery,
-                title, description, due_date_type, due_date, expected_price, location, status: "ACTIVE"
-            })
-        } catch (err) {
-            if (
-                err.name == "SequelizeForeignKeyConstraintError" && 
-                err.fields.length === 1 && 
-                err.fields[0] === "CategoryId"
-            ) throw new ErrorHandler(403,"ForeignKeyConstraintError","Category id doesn't exist")
-            throw err
+        let category_obj = await findOneByName(category);
+        if (!category_obj) category_obj = await createCategory({
+            name: category, createdByUser: true
+        })
+        return await Task.create({
+            UserId: user_id,
+            CategoryId: category_obj.id,
+            thumbnail: thumbnail && await uploadFile(thumbnail), gallery,
+            title, description, due_date_type, due_date, expected_price, location, status: "ACTIVE"
+        })
+    },
+    patchTask: async (task,patchFields) => {
+        let { gallery, category, thumbnail } = patchFields
+        if (gallery) {
+            let gallery_file_urls = []
+            for (file of gallery) {
+                let url = await uploadFile(file)
+                gallery_file_urls.push(url);
+            }
+            patchFields.gallery = gallery_file_urls.join(",")
         }
-        return task;
+        if (thumbnail) patchFields.thumbnail = await uploadFile(thumbnail)
+        if (category){
+            console.log("Creating CATEGORY")
+            let category_obj = await findOneByName(category);
+            if (!category_obj) category_obj = await createCategory({
+                name: category, createdByUser: true
+            })
+            patchFields.CategoryId = category_obj.id
+        }
+        let updatedTask = await task.update({
+            CategoryId: patchFields.CategoryId,
+            title: patchFields.title,
+            description: patchFields.description,
+            due_date_type: patchFields.due_date_type,
+            due_date: patchFields.due_date,
+            expected_price: patchFields.expected_price,
+            status: patchFields.status
+        })
+        console.log({cloneDeep})
+        updatedTask = cloneDeep(updatedTask)
+        if (updatedTask.gallery) updatedTask.formattedGallery = updatedTask.gallery.split(",")
+        return updatedTask
     }
 }
