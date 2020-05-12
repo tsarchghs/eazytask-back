@@ -1,11 +1,11 @@
 {
   "openapi" : "3.0.1",
   "servers" : [ {
-    "description" : "SwaggerHub API Auto Mocking",
-    "url" : "https://virtserver.swaggerhub.com/gjergjk71/easytask/1.0.1-oas3"
-  }, {
     "description" : "In development",
     "url" : "http://eazytask-back.herokuapp.com/api/v1"
+  }, {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/gjergjk71/easytask/1.0.1-oas3"
   }, {
     "description" : "Works only in self-hosted",
     "url" : "http://localhost:4000/api/v1"
