@@ -243,7 +243,7 @@ module.exports = [
                 "title": "task-title",
                 "description": "task-description",
                 "due_date_type": "UNTIL_DATE",
-                "due_date": "2005-05-04T22:00:00.000Z",
+                "due_date": "2005-05-05T00:00:00.000Z",
                 "location": "location",
                 "expected_price": 500,
                 "status": "DELETED",
