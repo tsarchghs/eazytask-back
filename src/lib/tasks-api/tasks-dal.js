@@ -14,7 +14,7 @@ const FIELD_MODEL = {
     category: Category
 }
 
-const getModelsFromFIelds = fields => fields ? fields.split(",").map(x => {
+const getModelsFromFields = fields => fields ? fields.split(",").map(x => {
     if (FIELD_MODEL[x]) return FIELD_MODEL[x]
     throw new ErrorHandler(403,"Validation error", [`query.fields does not support ${x}`])
 }) : [];
@@ -25,7 +25,7 @@ module.exports = {
         let where = filters;
         if (where.category_id) where["Categories.id"] = where.category_id;
         let tasks = await Task.findAll({
-            include: getModelsFromFIelds(where.fields),
+            include: getModelsFromFields(where.fields),
             where: (delete where["fields"] && where),
         })
         return tasks
@@ -33,7 +33,7 @@ module.exports = {
     findOne: async (taskId,options) => {
         let task = await Task.findOne({ 
             where: { id: taskId },
-            include: options && getModelsFromFIelds(options.fields),
+            include: options && getModelsFromFields(options.fields),
         })
         if (!task) {
             throw new ErrorHandler(404, "Not found", [`Task not found`])
