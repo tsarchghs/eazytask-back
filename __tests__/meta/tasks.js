@@ -55,7 +55,7 @@ module.exports = [
                 description: "task-description",
                 location: "location",
                 due_date_type: "UNTIL_DATE",
-                due_date: "05/05/2005"
+                due_date: "2005-05-05T00:00:00.000Z"
             },
             headers: {
                 Accept: "application/json",
@@ -71,7 +71,7 @@ module.exports = [
                 "title": "task-title",
                 "description": "task-description",
                 "due_date_type": "UNTIL_DATE",
-                "due_date": "2005-05-05T00:00:00.000Z",
+                "due_date": new Date("2005-05-05T00:00:00.000Z"),
                 "location": "location",
                 "status": "ACTIVE",
             }
@@ -154,7 +154,7 @@ module.exports = [
         request: {
             headers: { Accept: "application/json", "Content-Type": "application/json" },
             method: "PATCH",
-            body: { due_date: "05/05/2005dasdas" },
+            body: { due_date: "2005-05-05T00:00:00.000Zdasdas" },
             fromNormal: true
         },
         response: {
@@ -162,7 +162,7 @@ module.exports = [
             "code": 403,
             "message": "Validation error",
             "errors": [
-                "due_date must be a `date` type, but the final value was: `Invalid Date` (cast from the value `\"05/05/2005dasdas\"`)."
+                "due_date must be a `date` type, but the final value was: `Invalid Date` (cast from the value `\"2005-05-05T00:00:00.000Zdasdas\"`)."
             ]
         }
     },
@@ -198,7 +198,7 @@ module.exports = [
                 "title": "task-title",
                 "description": "task-description",
                 "due_date_type": "UNTIL_DATE",
-                "due_date": "2005-05-05T00:00:00.000Z",
+                "due_date": new Date("2005-05-05T00:00:00.000Z"),
                 "location": "location",
                 "expected_price": 500,
                 "status": "ACTIVE",
@@ -243,7 +243,7 @@ module.exports = [
                 "title": "task-title",
                 "description": "task-description",
                 "due_date_type": "UNTIL_DATE",
-                "due_date": "2005-05-05T00:00:00.000Z",
+                "due_date": new Date("2005-05-05T00:00:00.000Z"),
                 "location": "location",
                 "expected_price": 500,
                 "status": "DELETED",

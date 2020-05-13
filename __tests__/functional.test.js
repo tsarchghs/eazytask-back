@@ -94,7 +94,7 @@ cases.forEach(case_ => {
                 try {
                     lazyFieldValidation(case_.lazyFieldValidation,data)
                 } catch (err) {
-                    console.log("Error on", JSON.stringify({ "case_.lazyFieldValidation": case_.lazyFieldValidation, orig_data}))
+                    console.log("Error on", JSON.stringify({ "case_.lazyFieldValidation": case_.lazyFieldValidation, orig_data }), data.data.Languages[0])
                     throw err;
                 }
             }
