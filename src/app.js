@@ -20,6 +20,7 @@ const categories_api = require("./lib/categories-api")
 const languages_api = require("./lib/languages-api")
 const skills_api = require("./lib/skills-api")
 const taskers_api = require("./lib/taskers-api");
+const offers_api = require("./lib/offers-api");
 
 const app = express();
 
@@ -30,7 +31,7 @@ app.use(logger)
 app.use(caseInsensitiveEmail)
 app.use(allowCrossDomain)
 
-let appInstances = [app, api_docs, auth_api, users_api, tasks_api, categories_api, languages_api, skills_api, taskers_api];
+let appInstances = [app, api_docs, auth_api, users_api, tasks_api, categories_api, languages_api, skills_api, taskers_api, offers_api];
 appInstances.forEach(a => a.use(allowCrossDomain))
 
 app.use("/api/v1", api_docs)
@@ -41,7 +42,7 @@ app.use("/api/v1", taskers_api)
 app.use("/api/v1", categories_api)
 app.use("/api/v1", languages_api)
 app.use("/api/v1", skills_api)
-
+app.use("/api/v1", offers_api)
 
 // app.use("/api/v1",MainRouter)
 app.get('/', (req, res) => res.json({test:true}))
