@@ -5,6 +5,8 @@ const auth_cases = require("./meta/auth");
 const categories_cases = require("./meta/categories");
 const languages_cases = require("./meta/languages");
 const skills_cases = require("./meta/skills");
+const tasks_cases = require("./meta/tasks");
+const taskers_cases = require("./meta/taskers");
 
 const request = require('supertest');
 const app = require("../src/app")
@@ -21,7 +23,9 @@ let cases = [
     ...auth_cases,
     ...categories_cases,
     ...languages_cases,
-    ...skills_cases
+    ...skills_cases,
+    ...tasks_cases,
+    ...taskers_cases
 ]
 
 let sortObj = obj => {
@@ -30,6 +34,12 @@ let sortObj = obj => {
     let keys = Object.keys(obj).sort();
     let new_obj = {}
     keys.forEach(k => {
+        let property = obj[k];
+        if (typeof(property) === "object") {
+            if (JSON.stringify(property)[0] === "{"){
+                property = sortObj(property)
+            }
+        } 
         new_obj[k] = obj[k]
     })
     return new_obj
@@ -66,7 +76,6 @@ beforeAll(async done => {
 cases.forEach(case_ => {
     describe(case_.title, () => {
         it(case_.description, async done => {
-            console.log({ tokens})
             let Authorization = case_.request.headers["Authorization"] ||
                                 (case_.request.fromNormal && tokens["normal"]) ||
                                 (case_.request.fromAdmin && tokens["admin"]) || ""
@@ -79,10 +88,16 @@ cases.forEach(case_ => {
             if (case_.before) await case_.before(models)
             case_.request.body = JSON.stringify(case_.request.body)
             
-            if (case_.lazyFieldValidation && case_.lazyFieldValidation[0].split(".")[1] === "[item]")
-                console.log({ lazyField: case_.lazyFieldValidation }, 99919, 99919, 99919, 99919, 99919)
-            if (case_.lazyFieldValidation) lazyFieldValidation(case_.lazyFieldValidation,data)
-
+            
+            if (case_.lazyFieldValidation) {
+                let orig_data = JSON.parse(JSON.stringify(data))
+                try {
+                    lazyFieldValidation(case_.lazyFieldValidation,data)
+                } catch (err) {
+                    console.log("Error on", JSON.stringify({ "case_.lazyFieldValidation": case_.lazyFieldValidation, orig_data}))
+                    throw err;
+                }
+            }
             expect(JSON.stringify(sortObj(data)))
                 .toBe(JSON.stringify(sortObj(case_.response)))
             
