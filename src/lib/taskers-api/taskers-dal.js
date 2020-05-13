@@ -1,5 +1,5 @@
 
-const { Tasker, Tasker_Language, Tasker_Skill } = require("../../models")
+const { Tasker, Language, Skill, Tasker_Language, Tasker_Skill } = require("../../models")
 const cloneDeep = require('../../utils/cloneDeep');
 
 const { ErrorHandler } = require("../../utils/error");
@@ -8,7 +8,8 @@ const { findLanguageByName, createLanguage } = require("../languages-dal");
 const { findSkillByName, createSkill } = require("../skills-dal");
 
 module.exports = {
-    findTaskerByPk: async id => (await Tasker.findByPk(id)),
+    findTaskerByPk: async id => await Tasker.findByPk(id, {include: [Language, Skill] }),
+    // findTaskerByPk: async id => await Tasker.findOne({ where: { id }, include: [Language, Skill] }),
     findOne: async userId => {
         let tasker = await Tasker.findOne({where:{"UserId": userId}});
         return tasker;
@@ -38,9 +39,9 @@ module.exports = {
 
         await Promise.all(language_instances.concat(skill_instances));
         let tasker = await Tasker.create(data);
-        console.log({language_instances,skill_instances})
+        console.log({ setLanguages: tasker.setLanguages, t2: language_instances.map(x => x.id)})
         tasker.setLanguages(language_instances.map(x => x.id));
-        tasker.setSkills(skill_instances.map(x => x.id));tasker
+        tasker.setSkills(skill_instances.map(x => x.id));
         tasker = cloneDeep(tasker)
         tasker.Languages = cloneDeep(language_instances)
         tasker.Skills = cloneDeep(skill_instances)

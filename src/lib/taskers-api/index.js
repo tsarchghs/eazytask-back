@@ -8,12 +8,15 @@ const { findTaskerByPk, findOne, createTasker } = require("./taskers-dal");
 
 const { ErrorHandler } = require("../../utils/error");
 
+const cloneDeep = require("../../utils/cloneDeep")
+
 app.get("/taskers/:taskerId", [
     validateRequest(get_taskerId,false)
 ], async (req, res) => {
     let tasker = await findTaskerByPk(req.params.taskerId);
     if (!tasker) 
-        throw new ErrorHandler(404, "Not found", [`Task not found`])
+        throw new ErrorHandler(404, "Not found", [`Tasker not found`])
+    tasker = cloneDeep(tasker)
     return res.json({
         status: 200,
         message: "success",
