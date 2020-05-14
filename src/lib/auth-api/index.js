@@ -21,6 +21,7 @@ const getResponse = user => ({
 
 app.get('/auth', jwtRequired, async (req, res) => {
     let user = await findUserByPk(req.auth.userId)
+    if (!user) throw new ErrorHandler(401, "Unauthorized")
     return res.json(getResponse(user))
 });
 
