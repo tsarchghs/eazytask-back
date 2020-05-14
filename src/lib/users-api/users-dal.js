@@ -31,6 +31,7 @@ module.exports = {
         if (patchFields.password) throw new Error("To be decided if we go for confirm password or not.")
         else patchFields.password = undefined // in case it's an empty string
         if (patchFields.profile_image) patchFields.profile_image = await uploadFile(patchFields.profile_image)
+        if (patchFields.cover_image) patchFields.cover_image = await uploadFile(patchFields.cover_image)
         return await user.update({ ...patchFields, id: undefined })
     }
 

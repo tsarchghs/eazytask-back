@@ -8,13 +8,21 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
-        description: NonNullString(DataTypes.STRING),
+        description: DataTypes.TEXT,
         status: NonNullStatusField(DataTypes.ENUM)
     })
 
     Offer.associate = models => {
-        Offer.belongsTo(models.Tasker);
-        Offer.belongsTo(models.Task);
+        Offer.belongsTo(models.Tasker, {
+            foreignKey: {
+                allowNull: false
+            },
+        })
+        Offer.belongsTo(models.Task, {
+            foreignKey: {
+                allowNull: false
+            },
+        })
     }
 
     return Offer;

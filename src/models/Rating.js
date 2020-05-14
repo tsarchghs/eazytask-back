@@ -29,7 +29,6 @@ module.exports = (sequelize, DataTypes) => {
                     field: "UserId",
                     allowNull: false
                 },
-                onDelete: "cascade"
             }
         )
         Rating.belongsTo(
@@ -39,7 +38,6 @@ module.exports = (sequelize, DataTypes) => {
                     field: "TaskerId",
                     allowNull: false
                 },
-                onDelete: "cascade"
             }
         )
     }

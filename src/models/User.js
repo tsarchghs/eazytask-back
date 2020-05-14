@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         city: DataTypes.STRING,
         address: DataTypes.STRING,
         profile_image: DataTypes.STRING,
+        cover_image: DataTypes.STRING,
         notification_option: {
             type: DataTypes.ENUM("SMS", "EMAIL"),
             allowNull: false

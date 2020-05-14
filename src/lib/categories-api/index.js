@@ -5,7 +5,8 @@ const app = module.exports = express();
 const { validateRequest, jwtRequired, passUserFromJWT, requireAdminAccess } = require("../../middlewares");
 const { post_categories } = require("./validations");
 
-const { findAll, createCategory } = require("./categories-dal");
+const { findAll } = require("./categories-dal");
+const { createCategory } = require("../categories-dal");
 
 
 app.get("/categories", async (req, res) => {
