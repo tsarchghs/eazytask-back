@@ -2,7 +2,7 @@
 const express = require("express");
 const app = module.exports = express();
 
-const { validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
+const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
 
 const { post_users, patch_users } = require("./validations")
 const { createUser, patchUser } = require("./users-dal")
@@ -16,6 +16,8 @@ const uploadMiddleware = upload.fields([
     { name: 'profile_image', maxCount: 1 }, 
     { name: 'cover_image', maxCount: 1 }
 ])
+
+app.use(allowCrossDomain)
 
 app.post("/users", validateRequest(post_users), async (req,res) => {
     let user = await createUser(req.body);

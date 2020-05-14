@@ -1,7 +1,7 @@
 const express = require("express");
 const app = module.exports = express();
 
-const { validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
+const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
 const { get_taskerId, post_taskers } = require("./validations");
 
 const { findTaskerByPk, findOne, createTasker } = require("./taskers-dal");
@@ -9,6 +9,8 @@ const { findTaskerByPk, findOne, createTasker } = require("./taskers-dal");
 const { ErrorHandler } = require("../../utils/error");
 
 const cloneDeep = require("../../utils/cloneDeep")
+
+app.use(allowCrossDomain)
 
 app.get("/taskers/:taskerId", [
     validateRequest(get_taskerId,false)

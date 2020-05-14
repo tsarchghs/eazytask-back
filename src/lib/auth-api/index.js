@@ -1,12 +1,13 @@
 const express = require("express");
+const { allowCrossDomain, validateRequest, jwtRequired } = require("../../middlewares");
 const app = module.exports = express();
-
-const { validateRequest, jwtRequired } = require("../../middlewares");
 const { post_auth } = require("./validations")
 const createToken = require("./createToken");
 const validateCredentials = require("./validateCredentials")
 
 const { findUserByPk } = require("../users-dal");
+
+const { ErrorHandler } = require("../../utils/error")
 
 const getResponse = user => ({
     status: "success",
@@ -19,8 +20,12 @@ const getResponse = user => ({
     }
 })
 
+app.use(allowCrossDomain)
+
 app.get('/auth', jwtRequired, async (req, res) => {
     let user = await findUserByPk(req.auth.userId)
+    console.log({user})
+    if (!user) throw new ErrorHandler(401, "Unauthorized")
     return res.json(getResponse(user))
 });
 

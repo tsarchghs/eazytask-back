@@ -3,6 +3,7 @@ const express = require("express");
 const app = module.exports = express();
 
 const { 
+    allowCrossDomain,
     validateRequest, 
     jwtRequired, 
     passUserFromJWT,
@@ -14,6 +15,8 @@ const { post_offers } = require("./validations");
 const { createOffer, findByTaskerAndTask } = require("./offers-dal");
 
 const { ErrorHandler } = require("../../utils/error")
+
+app.use(allowCrossDomain)
 
 app.post("/offers",[
         validateRequest(post_offers),

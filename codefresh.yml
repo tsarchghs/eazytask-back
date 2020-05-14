@@ -19,3 +19,4 @@ steps:
         - npm install -g codecov
         - npm run test
         - codecov
+        
