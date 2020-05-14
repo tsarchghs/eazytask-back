@@ -1,7 +1,6 @@
 const express = require("express");
+const { allowCrossDomain, validateRequest, jwtRequired } = require("../../middlewares");
 const app = module.exports = express();
-
-const { validateRequest, jwtRequired } = require("../../middlewares");
 const { post_auth } = require("./validations")
 const createToken = require("./createToken");
 const validateCredentials = require("./validateCredentials")
@@ -20,6 +19,8 @@ const getResponse = user => ({
         expires_in: 10000
     }
 })
+
+app.use(allowCrossDomain)
 
 app.get('/auth', jwtRequired, async (req, res) => {
     let user = await findUserByPk(req.auth.userId)

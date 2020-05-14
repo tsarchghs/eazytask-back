@@ -31,8 +31,8 @@ app.use(logger)
 app.use(caseInsensitiveEmail)
 app.use(allowCrossDomain)
 
-let appInstances = [app, api_docs, auth_api, users_api, tasks_api, categories_api, languages_api, skills_api, taskers_api, offers_api];
-appInstances.forEach(a => a.use(allowCrossDomain))
+// let appInstances = [app, api_docs, auth_api, users_api, tasks_api, categories_api, languages_api, skills_api, taskers_api, offers_api];
+// appInstances.forEach(a => a.use(allowCrossDomain))
 
 app.use("/api/v1", api_docs)
 app.use("/api/v1", auth_api)

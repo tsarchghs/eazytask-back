@@ -2,7 +2,7 @@
 const express = require("express");
 const app = module.exports = express();
 
-const { validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
+const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
 const { 
     get_tasks, 
     post_tasks, 
@@ -25,6 +25,8 @@ const uploadMiddleware = upload.fields([
     { name: 'thumbnail', maxCount: 1 },
     { name: 'gallery', maxCount: 8 }
 ])
+
+app.use(allowCrossDomain)
 
 app.get('/tasks', validateRequest(get_tasks), async (req, res) => {
     let tasks = await findAll(req.query);

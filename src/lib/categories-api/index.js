@@ -2,12 +2,13 @@
 const express = require("express");
 const app = module.exports = express();
 
-const { validateRequest, jwtRequired, passUserFromJWT, requireAdminAccess } = require("../../middlewares");
+const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT, requireAdminAccess } = require("../../middlewares");
 const { post_categories } = require("./validations");
 
 const { findAll } = require("./categories-dal");
 const { createCategory } = require("../categories-dal");
 
+app.use(allowCrossDomain)
 
 app.get("/categories", async (req, res) => {
     let categories = await findAll()

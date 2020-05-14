@@ -2,12 +2,13 @@
 const express = require("express");
 const app = module.exports = express();
 
-const { validateRequest, jwtRequired, passUserFromJWT, requireAdminAccess } = require("../../middlewares");
+const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT, requireAdminAccess } = require("../../middlewares");
 const { post_languages } = require("./validations");
 
 const { findAll } = require("./languages-dal");
 const { createLanguage } = require("../languages-dal");
 
+app.use(allowCrossDomain)
 
 app.get("/languages", async (req, res) => {
     let languages = await findAll()
