@@ -8,6 +8,8 @@ const validateCredentials = require("./validateCredentials")
 
 const { findUserByPk } = require("../users-dal");
 
+const { ErrorHandler } = require("../../utils/error")
+
 const getResponse = user => ({
     status: "success",
     code: 200,
