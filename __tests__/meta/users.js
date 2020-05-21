@@ -64,14 +64,17 @@ module.exports = [
             "message": "success",
             "code": 201,
             "data": {
-                "first_name": "string",
-                "last_name": "string",
-                "email": "example1@example.com",
-                "notification_option": "EMAIL",
-                "isAdmin": false,
+                "user": {
+                    "setupCompleted": false,
+                    "first_name": "string",
+                    "last_name": "string",
+                    "email": "example1@example.com",
+                    "notification_option": "EMAIL",
+                    "isAdmin": false,
+                }
             }
         },
-        lazyFieldValidation: ["data.id","data.createdAt","data.updatedAt"]
+        lazyFieldValidation: ["data.user.id","data.user.createdAt","data.user.updatedAt", "data.token"]
     },
     {
         id: "users_4",

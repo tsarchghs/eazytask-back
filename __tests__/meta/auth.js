@@ -13,11 +13,12 @@ let GET_POST_AUTH_RES = {
             "gender": null,
             "date_of_birth": null,
             "short_biography": null,
-            "country": null,
             "city": null,
+            "zip": null,
             "address": null,
             "profile_image": null,
             "cover_image": null,
+            "setupCompleted": false,
             "notification_option": "EMAIL",
             "isAdmin": false
         },
