@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken")
-const { JWT_SECRET } = require("../../configs")
+const { JWT_SECRET } = require("../configs")
 
 module.exports = (userId) => {
     const token = jwt.sign({
