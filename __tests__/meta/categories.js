@@ -50,7 +50,7 @@ module.exports = [
             "data": {
                 "id": 1,
                 "name": "new-category-name",
-                "createdByUser": false
+                "createdByUser": false,
             }
         },
         lazyFieldValidation: ["data.updatedAt", "data.createdAt"]
@@ -107,7 +107,8 @@ module.exports = [
                 {
                     "id": 1,
                     "name": "new-category-name",
-                    "createdByUser": false
+                    "createdByUser": false,
+                    "CategoryGroupId": null
                 }
             ]
         },

@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/gjergjk71/eazytask-back#readme",
   "dependencies": {
+    "admin-bro": "2.3.1",
+    "admin-bro-expressjs": "2.0.5",
+    "admin-bro-sequelizejs": "0.4.2",
     "aws-sdk": "2.669.0",
     "bcrypt": "4.0.1",
     "clone-deep": "4.0.1",
@@ -30,6 +33,7 @@
     "express": "4.17.1",
     "express-async-errors": "3.1.1",
     "express-fileupload": "1.1.7-alpha.3",
+    "express-formidable": "1.2.0",
     "express-jwt": "5.3.3",
     "jsonwebtoken": "8.5.1",
     "morgan": "1.10.0",
@@ -37,6 +41,7 @@
     "multer-s3": "2.9.0",
     "mysql2": "2.1.0",
     "sequelize": "5.21.7",
+    "sequelize-admin": "0.0.0",
     "swagger-ui-express": "4.1.4",
     "yup": "0.28.5"
   },

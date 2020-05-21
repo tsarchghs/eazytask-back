@@ -13,7 +13,7 @@ const app = require("../src/app")
 const agent = request(app);
 const models = require("../src/models")
 
-const createToken = require("../src/lib/auth-api/createToken")
+const createToken = require("../src/utils/createToken")
 const lazyFieldValidation = require("./utils/lazyFieldValidation");
 
 jest.setTimeout(25000);

@@ -23,18 +23,23 @@ module.exports = (sequelize, DataTypes) => {
         gender: DataTypes.STRING,
         date_of_birth: DataTypes.DATEONLY,
         short_biography: DataTypes.STRING,
-        country: DataTypes.STRING,
         city: DataTypes.STRING,
+        zip: DataTypes.STRING,
         address: DataTypes.STRING,
         profile_image: DataTypes.STRING,
         cover_image: DataTypes.STRING,
+        setupCompleted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
+        },
         notification_option: {
             type: DataTypes.ENUM("SMS", "EMAIL"),
             allowNull: false
         },
         isAdmin: {
             type: DataTypes.BOOLEAN,
-            default: false,
+            defaultValue: false,
             allowNull: false
         }
     }, options);

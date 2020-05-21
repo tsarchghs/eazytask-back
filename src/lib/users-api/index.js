@@ -6,7 +6,7 @@ const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = requ
 
 const { post_users, patch_users } = require("./validations")
 const { createUser, patchUser } = require("./users-dal")
-
+const createToken = require("../../utils/createToken")
 const { ErrorHandler } = require("../../utils/error")
 
 const multer = require('multer')
@@ -24,7 +24,7 @@ app.post("/users", validateRequest(post_users), async (req,res) => {
     return res.json({
         message: "success",
         code: 201,
-        data: user
+        data: { user, token: createToken(user.id) }
     })
 })
 
