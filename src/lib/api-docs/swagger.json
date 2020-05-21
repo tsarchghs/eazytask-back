@@ -74,7 +74,232 @@
                   }, {
                     "properties" : {
                       "data" : {
-                        "$ref" : "#/components/schemas/User"
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories" : {
+      "get" : {
+        "tags" : [ "Categories" ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/Category"
+                        }
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Categories" ],
+        "security" : [ {
+          "jwt_auth" : [ ]
+        } ],
+        "summary" : "Create a new Category",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "name" ],
+                "properties" : {
+                  "Name" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/Category"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/skills" : {
+      "get" : {
+        "tags" : [ "Skills" ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/Skill"
+                        }
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Skills" ],
+        "security" : [ {
+          "jwt_auth" : [ ]
+        } ],
+        "summary" : "Create a new Skill",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "name" ],
+                "properties" : {
+                  "Name" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/Skill"
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/languages" : {
+      "get" : {
+        "tags" : [ "Languages" ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "type" : "array",
+                        "items" : {
+                          "$ref" : "#/components/schemas/Language"
+                        }
+                      }
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Languages" ],
+        "security" : [ {
+          "jwt_auth" : [ ]
+        } ],
+        "summary" : "Create a new Language",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "name" ],
+                "properties" : {
+                  "Name" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/ApiResponse"
+                  }, {
+                    "type" : "object"
+                  }, {
+                    "properties" : {
+                      "data" : {
+                        "$ref" : "#/components/schemas/Language"
                       }
                     }
                   } ]
@@ -762,6 +987,9 @@
           "profile_image" : {
             "type" : "string"
           },
+          "cover_image" : {
+            "type" : "string"
+          },
           "notification_option" : {
             "type" : "string",
             "enum" : [ "SMS", "EMAIL" ]
@@ -771,6 +999,11 @@
             "readOnly" : true
           },
           "createdAt" : {
+            "type" : "string",
+            "format" : "date",
+            "readOnly" : true
+          },
+          "updatedAt" : {
             "type" : "string",
             "format" : "date",
             "readOnly" : true
@@ -1070,12 +1303,6 @@
           },
           "data" : {
             "type" : "string"
-          },
-          "errors" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
           }
         }
       }
