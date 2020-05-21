@@ -19,6 +19,8 @@ module.exports = {
         date_of_birth: yup.date(),
         country: yup.string(),
         city: yup.string(),
+        zip: yup.string(),
+        address: yup.string(),
         address: yup.string(),
         profile_image: yup.string(),
         notification_option: yup.string().oneOf(["SMS", "EMAIL"])

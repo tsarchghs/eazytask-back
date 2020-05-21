@@ -12,8 +12,10 @@ module.exports = (sequelize, DataTypes) => {
             through: models.Tasker_Language,
             foreignKey: "TaskerId"
         })
-        Tasker.hasMany(models.Rating)
-        Tasker.hasMany(models.Offer);
+        Tasker.belongsToMany(models.City, {
+            through: models.Tasker_City,
+            foreignKey: "TaskerId"
+        })
         Tasker.belongsToMany(
             models.Skill, 
             { 
@@ -21,6 +23,8 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "TaskerId"
             }
         );
+        Tasker.hasMany(models.Rating)
+        Tasker.hasMany(models.Offer);
     }
     return Tasker
 }
