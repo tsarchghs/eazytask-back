@@ -1,10 +1,10 @@
 "use strict"
 
-const { NonNullUniqueString } = require("./common")
+const { NonNullString } = require("./common")
 
 module.exports = (sequelize, DataTypes) => {
     let Category = sequelize.define("Category",{
-        name: NonNullUniqueString(DataTypes.STRING),
+        name: NonNullString(DataTypes.STRING),
         createdByUser: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

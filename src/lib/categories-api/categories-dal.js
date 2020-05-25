@@ -2,5 +2,11 @@
 const { Category } = require("../../models")
 
 module.exports = {
-    findAll: async () => (await Category.findAll())
+    findAll: async ({ categoryGroupId }) => (
+        await Category.findAll({ 
+            where: { 
+                CategoryGroupId: categoryGroupId
+            }
+        })
+    )
 }

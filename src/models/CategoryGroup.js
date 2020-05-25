@@ -1,10 +1,10 @@
 "use strict"
 
-const { NonNullUniqueString } = require("./common")
+const { NonNullString } = require("./common")
 
 module.exports = (sequelize, DataTypes) => {
     let CategoryGroup = sequelize.define("CategoryGroup",{
-        name: NonNullUniqueString(DataTypes.STRING)
+        name: NonNullString(DataTypes.STRING)
     })
     CategoryGroup.associate = models => {
         CategoryGroup.hasMany(models.Category);

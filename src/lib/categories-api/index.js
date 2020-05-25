@@ -11,7 +11,7 @@ const { createCategory } = require("../categories-dal");
 app.use(allowCrossDomain)
 
 app.get("/categories", async (req, res) => {
-    let categories = await findAll()
+    let categories = await findAll({ categoryGroupId: req.query.categoryGroupId })
     return res.json({
         message: "success",
         status: 200,

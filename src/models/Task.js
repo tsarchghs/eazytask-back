@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
     let Task = sequelize.define("Task", {
-        thumbnail: DataTypes.STRING,
+        thumbnail: DataTypes.TEXT,
         gallery: DataTypes.TEXT,
         title: NonNullString(DataTypes.STRING),
         description: NonNullString(DataTypes.STRING),
