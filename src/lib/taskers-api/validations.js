@@ -1,5 +1,5 @@
 const yup = require("yup");
-const { id } = require("../../utils/validations");
+const { id } = require("../utils/validations");
 
 let stringArray = yup.array().of(
     yup.string()

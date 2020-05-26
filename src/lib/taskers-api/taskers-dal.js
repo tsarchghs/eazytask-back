@@ -1,6 +1,6 @@
 
 const { Tasker, Language, Skill, Tasker_Language, Tasker_Skill } = require("../../models")
-const cloneDeep = require('../../utils/cloneDeep');
+const cloneDeep = require("../utils/cloneDeep")
 
 const { ErrorHandler } = require("../../utils/error");
 

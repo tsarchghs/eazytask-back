@@ -8,7 +8,7 @@ const { findTaskerByPk, findOne, createTasker } = require("./taskers-dal");
 
 const { ErrorHandler } = require("../../utils/error");
 
-const cloneDeep = require("../../utils/cloneDeep")
+const cloneDeep = require("../utils/cloneDeep")
 
 app.use(allowCrossDomain)
 

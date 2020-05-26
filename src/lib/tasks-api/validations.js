@@ -1,6 +1,6 @@
 
 const yup = require("yup");
-const common = require("../../utils/validations");
+const common = require("../utils/validations");
 
 module.exports = {
     get_tasks: yup.object().shape({

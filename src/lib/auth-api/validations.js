@@ -1,5 +1,5 @@
 const yup = require("yup");
-const { password } = require("../../utils/validations")
+const { password } = require("../utils/validations");
 
 module.exports = {
     post_auth: yup.object().shape({

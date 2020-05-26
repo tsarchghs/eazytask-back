@@ -6,7 +6,7 @@ const { ErrorHandler } = require("../../utils/error");
 
 const { findOneByName, createCategory } = require("../categories-dal")
 
-const cloneDeep= require("../../utils/cloneDeep")
+const cloneDeep = require("../utils/cloneDeep")
 
 const FIELD_MODEL = {
     user: User,

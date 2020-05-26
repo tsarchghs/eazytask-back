@@ -1,5 +1,5 @@
 const yup = require("yup")
-const common = require("../../utils/validations");
+const common = require("../utils/validations");
 
 module.exports = {
     post_offers: yup.object().shape({

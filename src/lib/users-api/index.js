@@ -6,7 +6,7 @@ const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = requ
 
 const { post_users, patch_users } = require("./validations")
 const { createUser, patchUser } = require("./users-dal")
-const createToken = require("../../utils/createToken")
+const createToken = require("../utils/createToken")
 const { ErrorHandler } = require("../../utils/error")
 
 const multer = require('multer')
