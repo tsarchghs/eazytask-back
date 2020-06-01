@@ -1,0 +1,35 @@
+require('dotenv').config()
+
+const { exec } = require("child_process");
+
+const models = require("../src/models")
+let synced = models.sequelize.sync({ force: true });
+
+let run = async () => {
+    await synced;
+    let seeds = [
+        "cities-seed",
+        "languages-seed",
+        "skills-seed",
+        "categories-groups-seed",
+        "categories-seed",
+        "users-seed-mock",
+        "taskers-seed-mock",
+    ]
+    let seed_cmd = "npx sequelize-cli db:seed --seed"
+    let cmd = seeds.map(seed_name => seed_cmd + " " + seed_name).join("&&");
+
+    exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+    });
+}
+
+run();
