@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         name: NonNullString(DataTypes.STRING)
     })
     CategoryGroup.associate = models => {
-        CategoryGroup.hasMany(models.Category);
+        CategoryGroup.hasMany(models.Category, { allowNull: true});
     }
     return CategoryGroup
 }

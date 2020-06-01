@@ -11,17 +11,17 @@ module.exports = {
         })
     }),
     patch_users: yup.object().shape({
-        first_name: yup.string().min(2),
-        lastname: yup.string().min(2),
+        notification_option: yup.string().oneOf(["SMS", "EMAIL"]),
         email: yup.string().email(),
-        password,
-        cities: yup.array().of(yup.string()),
-        skills: yup.array().of(yup.string()),
-        languages: yup.array().of(yup.string()),
-        zip: yup.string(),
-        address: yup.string(),
+        phone: yup.string(),
         profile_image: yup.string(),
         cover_image: yup.string(),
-        notification_option: yup.string().oneOf(["SMS", "EMAIL"])
+        zipCode: yup.string(),
+        address: yup.string(),
+        city: yup.string(),
+        first_name: yup.string().min(2),
+        lastname: yup.string().min(2),
+        password,
+        setupCompleted: yup.bool(),
     })
 }

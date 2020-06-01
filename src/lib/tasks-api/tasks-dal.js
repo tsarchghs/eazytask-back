@@ -50,7 +50,9 @@ module.exports = {
         due_date_type,
         due_date,
         expected_price,
-        location
+        address,
+        zipCode,
+        city
     }) => {
         if (gallery) {
             let gallery_file_urls = []
@@ -68,7 +70,8 @@ module.exports = {
             UserId: user_id,
             CategoryId: category_obj.id,
             thumbnail: thumbnail && await uploadFile(thumbnail), gallery,
-            title, description, due_date_type, due_date, expected_price, location, status: "ACTIVE"
+            title, description, due_date_type, 
+            due_date, expected_price, address, zipCode, city, status: "ACTIVE"
         })
     },
     patchTask: async (task,patchFields) => {

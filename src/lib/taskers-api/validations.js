@@ -13,7 +13,7 @@ module.exports = {
     }),
     post_taskers: yup.object().shape({
         requestBody: yup.object().shape({
-            area_of_activity: yup.string().required(),
+            cities: stringArray,
             languages: stringArray,
             skills: stringArray,
         })

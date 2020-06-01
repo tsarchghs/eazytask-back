@@ -23,7 +23,7 @@ const getResponse = user => ({
 app.use(allowCrossDomain)
 
 app.get('/auth', jwtRequired, async (req, res) => {
-    let user = await findUserByPk(req.auth.userId)
+    let user = await findUserByPk(req.auth.userId,true)
     if (!user) throw new ErrorHandler(401, "Unauthorized")
     return res.json(getResponse(user))
 });

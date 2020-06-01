@@ -4,7 +4,6 @@ const { NonNullUniqueString, NonNullString } = require("./common")
 
 module.exports = (sequelize, DataTypes) => {
     let Tasker = sequelize.define("Tasker",{
-        area_of_activity: NonNullString(DataTypes.STRING)
     })
     Tasker.associate = models => {
         Tasker.belongsTo(models.User)

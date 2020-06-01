@@ -11,7 +11,8 @@ module.exports = {
             expire_soon: yup.boolean(),
             min_budget: yup.number().integer(),
             max_budget: yup.number().integer(),
-            title: yup.string()
+            title: yup.string(),
+            UserId: common.id,
         })
     }),
     get_taskId: yup.object().shape({
@@ -35,7 +36,9 @@ module.exports = {
     post_tasks_requestBody: yup.object().shape({
         category: yup.string().required(),
         title: yup.string().required(),
-        location: yup.string().required(),
+        address: yup.string().required(),
+        zipCode: yup.string().required(),
+        city: yup.string().required(),
         description: yup.string().required(),
         due_date_type: yup.string().oneOf(["FIXED_DATE", "UNTIL_DATE"]).required(),
         due_date: yup.date().required(),

@@ -28,7 +28,7 @@ const uploadMiddleware = upload.fields([
 
 app.use(allowCrossDomain)
 
-app.get('/tasks', validateRequest(get_tasks), async (req, res) => {
+app.get('/tasks', validateRequest(get_tasks,false), async (req, res) => {
     let tasks = await findAll(req.query);
     return res.json({
         message: "success",

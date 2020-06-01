@@ -1,8 +1,6 @@
 'use strict';
 
-const categorygroups = [
-  "Household", "Technical"
-]
+const categorygroups = require("./data/categorygroups")
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

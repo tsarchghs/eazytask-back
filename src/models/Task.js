@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: true
         },
-        location: NonNullString(DataTypes.STRING),
+        address: NonNullString(DataTypes.STRING),
+        zipCode: NonNullString(DataTypes.STRING),
+        city: NonNullString(DataTypes.STRING),
         expected_price: {
             type: DataTypes.FLOAT,
             allowNull: true

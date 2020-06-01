@@ -1,31 +1,6 @@
 'use strict';
 
-const categories = [
-  {
-    name: "Handicraft work",
-    categoryGroupId: 1
-  },
-  {
-    name: "Gradening work",
-    categoryGroupId: 1
-  },
-  {
-    name: "Moving & Cleaning",
-    categoryGroupId: 1
-  },
-  {
-    name: "Furniture",
-    categoryGroupId: 1
-  },
-  {
-    name: "Handicraft work",
-    categoryGroupId: 1
-  },
-  {
-    name: "CategoryName",
-    categoryGroupId: 2
-  }
-]
+const categories = require("./data/categories");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

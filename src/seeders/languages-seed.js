@@ -1,8 +1,6 @@
 'use strict';
 
-const languages = [
-  "English", "Deutch", "Shqip"
-]
+const languages = require("./data/languages");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

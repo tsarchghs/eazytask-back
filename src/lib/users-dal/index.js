@@ -1,6 +1,10 @@
 
-const { User } = require("../../models")
+const { User, Tasker } = require("../../models")
 
 module.exports = {
-    findUserByPk: async pk => await User.findByPk(pk)
+    findUserByPk: async (pk,includeTasker) => {
+        let include = []
+        if (includeTasker) include.push(Tasker);
+        return await User.findOne({ where: { id: pk }, include })
+    }
 }

@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         date_of_birth: DataTypes.DATEONLY,
         short_biography: DataTypes.STRING,
         city: DataTypes.STRING,
-        zip: DataTypes.STRING,
+        zipCode: DataTypes.STRING,
         address: DataTypes.STRING,
         profile_image: DataTypes.STRING,
         cover_image: DataTypes.STRING,

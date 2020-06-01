@@ -1,8 +1,6 @@
 'use strict';
 
-const skills = [
-  "Moving", "Cleaning"
-]
+const skills = require("./data/skills");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
