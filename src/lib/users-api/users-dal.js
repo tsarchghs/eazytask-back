@@ -1,5 +1,5 @@
 
-const { User } = require("../../models")
+const { User, Tasker } = require("../../models")
 
 const bcrypt = require("bcrypt")
 const { SALT_ROUNDS } = require("../../configs")
@@ -8,7 +8,24 @@ const { ErrorHandler } = require("../../utils/error")
 const { findUserByPk } = require("../users-dal");
 const uploadFile = require("../aws/uploadFile");
 
+const getModelsFromFields = require("../utils/getModelsFromFields");
+
+const FIELD_MODEL = {
+    tasker: Tasker
+}
+
 module.exports = {
+    findOne: async (userId, options = {}) => {
+        console.log(getModelsFromFields(FIELD_MODEL, options.fields), "INCLUDE")
+        let user = await User.findOne({
+            where: { id: userId },
+            include: options.fields && getModelsFromFields(FIELD_MODEL, options.fields),
+        })
+        if (!user) {
+            throw new ErrorHandler(404, "Not found", [`User not found`])
+        }
+        return user;
+    },
     createUser: async user => {
         if (!user.notification_option) user.notification_option = "EMAIL"
         let createdUser;
