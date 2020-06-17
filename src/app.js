@@ -57,7 +57,7 @@ app.use(errorHandler)
 if (require.main === module) {
     const PORT = process.env.PORT || 4000;
     app.listen(PORT,() => console.log("Running on port: ",PORT))
-    if (process.env.ENABLE_ADMIN && false){
+    if (process.env.ENABLE_ADMIN){
         require("./lib/admin").listen(PORT + 1, () => console.log("Admin running on: ",PORT + 1))
     }
 }
