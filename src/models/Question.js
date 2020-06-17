@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     })
     Question.associate = models => {
         Question.belongsTo(models.Task);
+        Question.hasOne(models.Answer);
     }
     return Question;
 }
