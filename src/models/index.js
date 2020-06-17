@@ -21,7 +21,7 @@ console.log(process.env.IN_TRAVIS, process.env.MYSQL_DATABASE, process.env.MYSQL
 
 let sequelize;
 if (process.env.CLEARDB_DATABASE_URL){
-    sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL);
+    sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, { dialect: "mysql" });
 } else {
     sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
         host: process.env.MYSQL_HOST,
