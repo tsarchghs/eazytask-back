@@ -5,7 +5,7 @@ const app = module.exports = express();
 const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
 
 const { post_users, patch_users } = require("./validations")
-const { createUser, patchUser } = require("./users-dal")
+const { createUser, patchUser, findOne } = require("./users-dal")
 const createToken = require("../utils/createToken")
 const { ErrorHandler } = require("../../utils/error")
 
@@ -19,7 +19,16 @@ const uploadMiddleware = upload.fields([
 
 app.use(allowCrossDomain)
 
-app.post("/users", validateRequest(post_users), async (req,res) => {
+app.get("/users/:userId", async (req, res) => {
+    let user = await findOne(req.params.userId,req.query);
+    return res.json({
+        message: "success",
+        code: 201,
+        data: user
+    })
+})
+
+app.post("/users", validateRequest(post_users), async (req, res) => {
     let user = await createUser(req.body);
     return res.json({
         message: "success",
