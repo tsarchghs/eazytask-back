@@ -1,5 +1,5 @@
 
-const { Task, User, Offer, Category } = require("../../models")
+const { Task, Tasker, User, Offer, Category, Question, Answer, Sequelize } = require("../../models")
 const uploadFile = require("../aws/uploadFile");
 
 const { ErrorHandler } = require("../../utils/error");
@@ -7,33 +7,118 @@ const { ErrorHandler } = require("../../utils/error");
 const { findOneByName, createCategory } = require("../categories-dal")
 
 const cloneDeep = require("../utils/cloneDeep")
+const getModelsFromFields = require("../utils/getModelsFromFields");
+
+const moment = require("moment");
 
 const FIELD_MODEL = {
     user: User,
-    offers: Offer,
-    category: Category
+    offers: {
+        model: Offer,
+        include: [ 
+            { 
+                model: Tasker,
+                include: [ User ]
+            }
+         ]
+    },
+    category: Category,
+    question: {
+        model: Question,
+        include: [Answer]
+    },
 }
-
-const getModelsFromFields = fields => fields ? fields.split(",").map(x => {
-    if (FIELD_MODEL[x]) return FIELD_MODEL[x]
-    throw new ErrorHandler(403,"Validation error", [`query.fields does not support ${x}`])
-}) : [];
 
 
 module.exports = {
-    findAll: async (filters) => {
+    countAll: async filters => {
+        let where = {}
+        console.log(filters)
+        if (filters["category_id"]) where["CategoryId"] = filters.category_id;
+        if (filters["city"]) where["city"] = { [Sequelize.Op.like]: "%" + filters.city + "%" };
+        if (filters["title"]) where["title"] = { [Sequelize.Op.like]: "%" + filters.title + "%" }; 
+        if (filters["due_date"]) where["due_date"] = filters.due_date;
+        
+        let expected_price_filter = {}
+        if (filters["min_expected_price"]) expected_price_filter[Sequelize.Op.gte] = Number(filters["min_expected_price"])
+        if (filters["max_expected_price"]) expected_price_filter[Sequelize.Op.lte] = Number(filters["max_expected_price"])
+        if (filters["min_expected_price"] || filters["max_expected_price"]) where.expected_price = Sequelize.and(expected_price_filter)
+        delete filters["min_expected_price"]; delete filters["max_expected_price"]
+
+        let and_due_date = []
+
+        if (filters["due_date"]) {
+            let due_date = moment.utc(filters.due_date);
+            due_date_f = {
+                [Sequelize.Op.gte]: due_date.startOf("day"),
+                [Sequelize.Op.lte]: due_date.clone().endOf("day")
+            }
+            and_due_date.push(due_date_f);
+        }
+        if (filters["expire_soon"] == "true") {
+            due_date = {
+                [Sequelize.Op.gte]: moment().startOf("day"),
+                [Sequelize.Op.lte]: moment().endOf("day").add(5, 'days')
+            }
+            and_due_date.push(due_date);
+            delete where["expire_soon"]
+        }
+        where.due_date = Sequelize.and(...and_due_date)
+        return await Task.count({ where })
+    },
+    findAll: async ({ limit, offset, category_id, ...filters}) => {
         let where = filters;
-        if (where.category_id) where["Categories.id"] = where.category_id;
+        if (where.category_id) {
+            where["category"] = category_id;
+        }
+        let and_due_date = []
+
+        if (where.due_date) {
+            let due_date = moment.utc(where.due_date);
+            due_date_f = {
+                [Sequelize.Op.gte]: due_date.startOf("day"),
+                [Sequelize.Op.lte]: due_date.clone().endOf("day")
+            }
+            and_due_date.push(due_date_f);
+        }
+        if (where.expire_soon == "true"){
+            console.log("where.expire_soon2", where.expire_soon)
+            due_date = {
+                [Sequelize.Op.gte]: moment().startOf("day"),
+                [Sequelize.Op.lte]: moment().endOf("day").add(5, 'days')
+            }
+            and_due_date.push(due_date);
+        }
+        where.due_date = Sequelize.and(...and_due_date)
+
+        let expected_price_filter = {}
+        if (filters["min_expected_price"]) expected_price_filter[Sequelize.Op.gte] = Number(filters["min_expected_price"])
+        if (filters["max_expected_price"]) expected_price_filter[Sequelize.Op.lte] = Number(filters["max_expected_price"])
+        if (filters["min_expected_price"] || filters["max_expected_price"]) where.expected_price = Sequelize.and(expected_price_filter)
+        delete filters["min_expected_price"]; delete filters["max_expected_price"]
+
+        if (where.title) where.title = { [Sequelize.Op.like]: "%" + where.title + "%" };
+        if (where.city) where.city = { [Sequelize.Op.like]: "%" + where.city + "%" }; 
+        delete where["expire_soon"]
+
+        let include = getModelsFromFields(FIELD_MODEL,where.fields);
+        if (category_id) include.push({
+            model: Category, where: { id: category_id }
+        })
+        console.log({ where })
         let tasks = await Task.findAll({
-            include: getModelsFromFields(where.fields),
+            include,
             where: (delete where["fields"] && where),
+            limit: Number(limit) || null,
+            offset: Number(offset) || null
         })
         return tasks
     },
-    findOne: async (taskId,options) => {
+    findOne: async (taskId,options = {}) => {
+        console.log(getModelsFromFields(FIELD_MODEL,options.fields),"INCLUDE")
         let task = await Task.findOne({ 
             where: { id: taskId },
-            include: options && getModelsFromFields(options.fields),
+            include: options.fields && getModelsFromFields(FIELD_MODEL,options.fields),
         })
         if (!task) {
             throw new ErrorHandler(404, "Not found", [`Task not found`])
@@ -54,9 +139,11 @@ module.exports = {
         zipCode,
         city
     }) => {
+        console.log({ gallery})
         if (gallery) {
             let gallery_file_urls = []
             for (file of gallery) {
+                console.log((file,91919))
                 let url = await uploadFile(file)
                 gallery_file_urls.push(url);
             }
@@ -75,7 +162,7 @@ module.exports = {
         })
     },
     patchTask: async (task,patchFields) => {
-        let { gallery, category, thumbnail } = patchFields
+        let { gallery, category, thumbnail, remove_thumbnail, remove_gallery } = patchFields
         if (gallery) {
             let gallery_file_urls = []
             for (file of gallery) {
@@ -83,8 +170,11 @@ module.exports = {
                 gallery_file_urls.push(url);
             }
             patchFields.gallery = gallery_file_urls.join(",")
+            console.log("gallery_file_urls", gallery_file_urls)
         }
         if (thumbnail) patchFields.thumbnail = await uploadFile(thumbnail)
+        if (remove_thumbnail) patchFields.thumbnail = null
+        if (remove_gallery) patchFields.gallery = null
         if (category){
             console.log("Creating CATEGORY")
             let category_obj = await findOneByName(category);
@@ -93,16 +183,17 @@ module.exports = {
             })
             patchFields.CategoryId = category_obj.id
         }
-        let updatedTask = await task.update({
-            CategoryId: patchFields.CategoryId,
-            title: patchFields.title,
-            description: patchFields.description,
-            due_date_type: patchFields.due_date_type,
-            due_date: patchFields.due_date,
-            expected_price: patchFields.expected_price,
-            status: patchFields.status
-        })
-        console.log({cloneDeep})
+        console.log({patchFields})
+        let updatedTask = await task.update(patchFields)
+        // let updatedTask = await task.update({
+        //     CategoryId: patchFields.CategoryId,
+        //     title: patchFields.title,
+        //     description: patchFields.description,
+        //     due_date_type: patchFields.due_date_type,
+        //     due_date: patchFields.due_date,
+        //     expected_price: patchFields.expected_price,
+        //     status: patchFields.status
+        // })
         updatedTask = cloneDeep(updatedTask)
         if (updatedTask.gallery) updatedTask.formattedGallery = updatedTask.gallery.split(",")
         return updatedTask
