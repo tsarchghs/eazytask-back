@@ -14,19 +14,47 @@ const {
     delete_tasks
 } = require("./validations");
 
-const { findOne, findAll, createTask, patchTask } = require("./tasks-dal");
+const { findOne, findAll, createTask, countAll, patchTask } = require("./tasks-dal");
 
 const { ErrorHandler } = require("../../utils/error")
 
 const multer = require('multer')
 const upload = multer();
 
-const uploadMiddleware = upload.fields([
-    { name: 'thumbnail', maxCount: 1 },
-    { name: 'gallery', maxCount: 8 }
-])
+// const uploadMiddleware = upload.fields([
+//     { name: 'thumbnail', maxCount: 1 },
+//     { name: 'gallery', maxCount: 4 }
+// ])
+
+const formatMulterAny = files => {
+    console.log(files)
+    let obj = {}
+    for (let fileObj of files){
+        let { fieldname } = fileObj;
+        let isArray = fieldname.indexOf("[]") !== -1;
+        if (isArray) {
+            if (!obj[fieldname]) obj[fieldname] = []
+            obj[fieldname].push(fileObj)
+        } else {
+            obj[fieldname] = fileObj
+        }
+    }
+    console.log(obj,"objobj")
+    return obj;
+}
+
+const uploadMiddleware = upload.any()
 
 app.use(allowCrossDomain)
+
+app.get("/tasks/count", async (req,res) => {
+    let count = await countAll(req.query);
+    return res.json({
+        message: "success",
+        status: 200,
+        data: { count }
+    })
+})
 
 app.get('/tasks', validateRequest(get_tasks,false), async (req, res) => {
     let tasks = await findAll(req.query);
@@ -52,21 +80,18 @@ app.patch('/tasks/:taskId',
         uploadMiddleware,
         jwtRequired,
         passUserFromJWT
-    ], async (req, res) => {
+    ], async (req, res) => {    
         await patch_tasks_requestBody.validate(req.body, { abortEarly: false })
             .catch(err => { throw new ErrorHandler(403, "Validation error", err.errors) })
-        let files = {};
-
-        if (req.files) {
-            if (req.files["thumbnail"] && req.files["thumbnail"].length) files["thumbnail"] = req.files["thumbnail"][0];
-            if (req.files["gallery"] && req.files["gallery"].length) files["gallery"] = req.files["gallery"];
-        }
+        console.log(req.body,req.query,req.files,199)
+        let files = req.files ? formatMulterAny(req.files) : undefined; 
         let task = await findOne(req.params.taskId)
         if (task.UserId !== req.user.id) throw new ErrorHandler(401,"Unauthorized")
         task = await patchTask(task,{
             ...req.body,
             ...req.query,
-            ...files
+            thumbnail: files && files["thumbnail"],
+            gallery: files &&files["gallery[]"]
         });
         return res.json({
             message: "success",
@@ -102,16 +127,13 @@ app.post('/tasks',
     ], async (req, res) => {
         await post_tasks_requestBody.validate(req.body, { abortEarly: false })
             .catch(err => { throw new ErrorHandler(403, "Validation error", err.errors) })
-        let files = {};
-        if (req.files) {
-            if (req.files["thumbnail"] && req.files["thumbnail"].length) files["thumbnail"] = req.files["thumbnail"][0];
-            if (req.files["gallery"] && req.files["gallery"].length) files["gallery"] = req.files["gallery"];
-        }
+        files = formatMulterAny(req.files); 
         let task = await createTask({
             user_id: req.user.id,
             ...req.body,
             ...req.query,
-            ...files
+            thumbnail: files["thumbnail"],
+            gallery: files["gallery[]"]
         });
         return res.json({
             message: "success",
