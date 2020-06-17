@@ -12,6 +12,7 @@ module.exports = {
             min_budget: yup.number().integer(),
             max_budget: yup.number().integer(),
             title: yup.string(),
+            limit: yup.number(),
             UserId: common.id,
         })
     }),
