@@ -20,7 +20,8 @@ const uploadMiddleware = upload.fields([
 app.use(allowCrossDomain)
 
 app.get("/users/:userId", async (req, res) => {
-    let user = await findOne(req.params.userId,req.query);
+    console.log("req.params.userId", req.params.userId)
+    let user = await findOne(Number(req.params.userId),req.query);
     return res.json({
         message: "success",
         code: 201,

@@ -1,5 +1,5 @@
 
-const { User, Tasker } = require("../../models")
+const { User, Tasker, Task, City } = require("../../models")
 
 const bcrypt = require("bcrypt")
 const { SALT_ROUNDS } = require("../../configs")
@@ -9,18 +9,30 @@ const { findUserByPk } = require("../users-dal");
 const uploadFile = require("../aws/uploadFile");
 
 const getModelsFromFields = require("../utils/getModelsFromFields");
+const cloneDeep = require("../utils/cloneDeep");
 
 const FIELD_MODEL = {
-    tasker: Tasker
+    tasker: { 
+        model: Tasker,
+        include: City
+    }
 }
 
 module.exports = {
     findOne: async (userId, options = {}) => {
-        console.log(getModelsFromFields(FIELD_MODEL, options.fields), "INCLUDE")
+        let getTasks = options.fields && options.fields.split(",").indexOf("task") !== -1;
+        options.fields = options.fields.split(",").filter(x => x != "task").join(",")
+        console.log("options.fields",options.fields)
         let user = await User.findOne({
             where: { id: userId },
             include: options.fields && getModelsFromFields(FIELD_MODEL, options.fields),
         })
+        if (getTasks){
+            let tasks = await Task.findAll({ where: { UserId: user.id }});
+            user = cloneDeep(user);
+            user.tasks = tasks;
+        }
+        console.log("USERUSER",user)
         if (!user) {
             throw new ErrorHandler(404, "Not found", [`User not found`])
         }
