@@ -29,7 +29,8 @@ app.post("/offers",[
         let offer = await createOffer({
             TaskerId: req.user.tasker.id,
             TaskId: req.body.taskId,
-            ...req.body
+            fields: req.query.fields,
+            ...req.body,
         })
         return res.json({
             message: "success",

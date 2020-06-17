@@ -27,8 +27,9 @@ const offers_api = require("./lib/offers-api");
 const app = express();
 
 app.use(compression())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(express.json({limit: '50mb'}));
 app.use(logger)
 app.use(caseInsensitiveEmail)
 app.use(allowCrossDomain)
@@ -56,7 +57,7 @@ app.use(errorHandler)
 if (require.main === module) {
     const PORT = process.env.PORT || 4000;
     app.listen(PORT,() => console.log("Running on port: ",PORT))
-    if (process.env.ENABLE_ADMIN){
+    if (process.env.ENABLE_ADMIN && false){
         require("./lib/admin").listen(PORT + 1, () => console.log("Admin running on: ",PORT + 1))
     }
 }

@@ -1,12 +1,21 @@
 
-const { Offer } = require("../../models")
+const { Tasker, Offer } = require("../../models")
 
 const { ErrorHandler } = require("../../utils/error")
 
+const getModelsFromFields = require("../utils/getModelsFromFields");
+
+const FIELD_MODEL = {
+    tasker: Tasker
+}
+
 module.exports = {
     createOffer: async data =>  {
+        let include = getModelsFromFields(FIELD_MODEL,data.fields);
+        delete data["fields"];
+        
         try {
-            return await Offer.create({ ...data, status: "ACTIVE" })
+            return await Offer.create({ ...data, status: "ACTIVE" }, { include })
         } catch (err) {
             if (
                 err.original.code === "ER_NO_REFERENCED_ROW_2" &&
