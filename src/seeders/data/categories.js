@@ -23,6 +23,6 @@ module.exports = [
     },
     {
         name: "CategoryName",
-        categoryGroupId: 2
+        categoryGroupId: 11
     }
 ]

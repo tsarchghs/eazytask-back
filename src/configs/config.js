@@ -8,4 +8,8 @@ module.exports = {
     "host": process.env.MYSQL_HOST,
     "dialect": "mysql",
   },
+  "staging": {
+    "url": process.env.CLEARDB_DATABASE_URL,
+    "dialect": "mysql",
+  },
 }

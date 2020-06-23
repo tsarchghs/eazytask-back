@@ -8,12 +8,11 @@ let synced = models.sequelize.sync({ force: true });
 let run = async () => {
     await synced;
     let seeds = [
+        "categories-groups-seed",
         "cities-seed",
         "languages-seed",
         "skills-seed",
-        "categories-groups-seed",
-        "categories-seed",
-        "users-seed"
+        "categories-seed"
     ]
     let seed_cmd = "npx sequelize-cli db:seed --seed"
     let cmd = seeds.map(seed_name => seed_cmd + " " + seed_name).join("&&");
@@ -29,6 +28,7 @@ let run = async () => {
         }
         console.log(`stdout: ${stdout}`);
     });
+    // exec("npx sequelize-cli db:seed --seed categories-seed")
 }
 
 run();
