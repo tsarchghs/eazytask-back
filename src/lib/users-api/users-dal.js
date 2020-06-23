@@ -27,15 +27,15 @@ module.exports = {
             where: { id: userId },
             include: options.fields && getModelsFromFields(FIELD_MODEL, options.fields),
         })
+        if (!user) {
+            throw new ErrorHandler(404, "Not found", [`User not found`])
+        }
         if (getTasks){
             let tasks = await Task.findAll({ where: { UserId: user.id }});
             user = cloneDeep(user);
             user.tasks = tasks;
         }
         console.log("USERUSER",user)
-        if (!user) {
-            throw new ErrorHandler(404, "Not found", [`User not found`])
-        }
         return user;
     },
     createUser: async user => {

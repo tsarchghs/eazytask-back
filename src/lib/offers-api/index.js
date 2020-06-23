@@ -10,13 +10,44 @@ const {
     passTaskerFromUser 
 } = require("../../middlewares");
 
-const { post_offers } = require("./validations");
+const { get_offers, get_offers_id, post_offers, accept_offer } = require("./validations");
 
-const { createOffer, findByTaskerAndTask } = require("./offers-dal");
+const { findAll, createOffer, findByTaskerAndTask, findOne, acceptOffer } = require("./offers-dal");
 
 const { ErrorHandler } = require("../../utils/error")
 
 app.use(allowCrossDomain)
+
+app.get('/offers', validateRequest(get_offers, false), async (req, res) => {
+    let offers = await findAll(req.query);
+    return res.json({
+        message: "success",
+        status: 200,
+        data: offers
+    })
+});
+app.get('/offers/:offerId', validateRequest(get_offers_id, false), async (req, res) => {
+    let tasks = await findOne(Number(req.params.offerId), req.query);
+    return res.json({
+        message: "success",
+        status: 200,
+        data: tasks
+    })
+});
+
+app.post('/tasks/:taskId/offers/:offerId/accept', validateRequest(accept_offer, false), async (req, res) => {
+    let { taskId, offerId } = req.params;
+    let offer = await acceptOffer({ 
+        taskId: Number(taskId), 
+        offerId: Number(offerId), 
+        currentUser: req.user
+    })
+    return res.json({
+        message: "success",
+        status: 200,
+        data: offer
+    })
+});
 
 app.post("/offers",[
         validateRequest(post_offers),

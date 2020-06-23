@@ -3,7 +3,7 @@ const { id } = require("../utils/validations");
 
 let stringArray = yup.array().of(
     yup.string()
-).required()
+)//.required()
 
 module.exports = {
     get_taskerId: yup.object().shape({
