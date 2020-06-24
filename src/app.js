@@ -5,6 +5,7 @@ require('express-async-errors');
 const models = require("./models")
 models.sequelize.sync({ force: false || process.env.DROP_TABLES_HEROKU });
 
+const http = require('http');
 const express = require('express')
 const compression = require("compression");
 const bodyParser = require("body-parser")
@@ -23,8 +24,13 @@ const cities_api = require("./lib/cities-api")
 const skills_api = require("./lib/skills-api")
 const taskers_api = require("./lib/taskers-api");
 const offers_api = require("./lib/offers-api");
+const messages_api = require("./lib/messages-api");
+const messages_ws = require("./lib/messages_ws");
 
 const app = express();
+const server = http.createServer(app)
+
+messages_ws(server)
 
 app.use(compression())
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
@@ -48,6 +54,8 @@ app.use("/api/v1", languages_api)
 app.use("/api/v1", cities_api)
 app.use("/api/v1", skills_api)
 app.use("/api/v1", offers_api)
+app.use("/api/v1/", messages_api);
+
 
 // app.use("/api/v1",MainRouter)
 app.get('/', (req, res) => res.json({test:true}))
@@ -56,7 +64,7 @@ app.use(errorHandler)
 
 if (require.main === module) {
     const PORT = process.env.PORT || 4000;
-    app.listen(PORT,() => console.log("Running on port: ",PORT))
+    server.listen(PORT,() => console.log("Running on port: ",PORT))
     if (process.env.ENBALE_ADMIN){
         require("./lib/admin").listen(process.env.PORT || 4001, () => console.log("Admin running on: ",PORT + 1))
     }
