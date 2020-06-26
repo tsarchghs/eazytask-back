@@ -21,11 +21,6 @@ const { ErrorHandler } = require("../../utils/error")
 const multer = require('multer')
 const upload = multer();
 
-// const uploadMiddleware = upload.fields([
-//     { name: 'thumbnail', maxCount: 1 },
-//     { name: 'gallery', maxCount: 4 }
-// ])
-
 const formatMulterAny = files => {
     console.log(files)
     let obj = {}

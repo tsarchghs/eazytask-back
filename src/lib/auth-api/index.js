@@ -15,8 +15,7 @@ const getResponse = user => ({
     message: "Authorized",
     data: {
         token: createToken(user.id),
-        user,
-        expires_in: 10000
+        user
     }
 })
 
