@@ -5,11 +5,17 @@ const { NonNullUniqueString, NonNullString } = require("./common")
 module.exports = (sequelize, DataTypes) => {
     let options = {
         defaultScope: {
-            attributes: { exclude: ['password'] },
+            attributes: { exclude: ['password', "verification_token"] },
+            where: {
+                deleted: false
+            }
         },
         scopes: {
             withPassword: {
                 attributes: {},
+            },
+            withVerificationCode: {
+                attributes: { exclude: ['password' ] }
             }
         }
     }
@@ -46,7 +52,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false
-        }
+        },
+        reason: DataTypes.TEXT,
+        verification_token: DataTypes.TEXT
     }, options);
     User.associate = models => {
         User.hasOne(models.Tasker)
