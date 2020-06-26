@@ -4,13 +4,17 @@ const app = module.exports = express();
 
 const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
 
-const { post_users, patch_users } = require("./validations")
-const { createUser, patchUser, findOne } = require("./users-dal")
+const { post_users, patch_users, post_send_verification_code, post_reset_password } = require("./validations")
+const { createUser, patchUser, findOne, findUserByEmail } = require("./users-dal")
 const createToken = require("../utils/createToken")
 const { ErrorHandler } = require("../../utils/error")
+const { JWT_SECRET } = require("../../configs")
 
 const multer = require('multer')
 const upload = multer();
+
+const jwt = require("jsonwebtoken");
+const { useResourceEdit } = require("admin-bro");
 
 const uploadMiddleware = upload.fields([
     { name: 'profile_image', maxCount: 1 }, 
@@ -18,6 +22,45 @@ const uploadMiddleware = upload.fields([
 ])
 
 app.use(allowCrossDomain)
+
+app.post("/users/send_verification_code", validateRequest(post_send_verification_code), async (req,res) => {
+    let { email } = req.body;
+    let code = Math.floor(100000 + Math.random() * 900000);
+    let token = createToken(null, { code, email  }, "5h")
+    try {
+        await patchUser(email, { verification_token: token })
+    } catch (err) {
+        if (err.message === "The resource you tried to update does not exist") {
+            console.log("PASSING: The resource you tried to update does not exist")
+        }
+        else throw err
+    }
+    console.log("Valid for 5 hours, Your code is: ", code)
+    console.log("DEV: token is: ", token)
+    return res.json({
+        message: "success",
+        code: 201
+    })
+})
+
+app.post("/users/reset_password", validateRequest(post_reset_password), async (req, res) => {
+    let { email, code, new_password } = req.body;
+    let user = await findUserByEmail(email,"withVerificationCode")
+    if (!user) throw new ErrorHandler(404, "User not found"); 
+    let decoded;
+    try {
+        decoded = jwt.verify(user.verification_token, JWT_SECRET)
+    } catch (err) {
+        if (err.name === "TokenExpiredError") 
+            throw new ErrorHandler(401, "Code has expired", [ "Verification code has expired."])
+    }
+    if (decoded.code !== code) throw new ErrorHandler(401,"Code is invalid");
+    await patchUser(user.id, { password: new_password })
+    return res.json({
+        message: "success",
+        code: 201
+    }) 
+})
 
 app.get("/users/:userId", async (req, res) => {
     console.log("req.params.userId", req.params.userId)
@@ -37,8 +80,6 @@ app.post("/users", validateRequest(post_users), async (req, res) => {
         data: { user, token: createToken(user.id) }
     })
 })
-
-// app.post("/users/:userId", upload.single("profile_image"),(req,res) => res.send(JSON.stringify([req.file,1])))
 
 app.patch("/users/:userId", 
     [

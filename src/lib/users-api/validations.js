@@ -23,5 +23,20 @@ module.exports = {
         lastname: yup.string().min(2),
         password,
         setupCompleted: yup.bool(),
+        deleted: yup.bool(),
+        reason: yup.string(),
+    }),
+    post_reset_password: yup.object().shape({
+        requestBody: yup.object().shape({
+            email: yup.string().email().required(),
+            code: yup.number().required().test("len", "code does not match required format", val => String(val).length === 6),
+            new_password: password.required(),
+            confirm_new_password: password.required().oneOf([yup.ref("new_password")]),
+        })
+    }),
+    post_send_verification_code: yup.object().shape({
+        requestBody: yup.object().shape({
+            email: yup.string().email().required()
+        })
     })
 }
