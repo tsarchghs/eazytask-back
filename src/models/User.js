@@ -6,11 +6,13 @@ module.exports = (sequelize, DataTypes) => {
     let options = {
         defaultScope: {
             attributes: { exclude: ['password', "verification_token"] },
-            where: {
-                deleted: false
-            }
         },
         scopes: {
+            activeOnly: {
+                where: {
+                    deleted: false
+                }
+            },
             withPassword: {
                 attributes: {},
             },
