@@ -38,5 +38,11 @@ module.exports = {
         requestBody: yup.object().shape({
             email: yup.string().email().required()
         })
-    })
+    }),
+    post_validate_verification_code: yup.object().shape({
+        requestBody: yup.object().shape({
+            email: yup.string().email().required(),
+            code: yup.number().required().test("len", "code does not match required format", val => String(val).length === 6),
+        })
+    }),
 }
