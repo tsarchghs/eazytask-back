@@ -51,8 +51,21 @@ app.get("/tasks/count", async (req,res) => {
     })
 })
 
-app.get('/tasks', validateRequest(get_tasks,false), async (req, res) => {
+app.get('/tasks', validateRequest(get_tasks, false), async (req, res) => {
     let tasks = await findAll(req.query);
+    return res.json({
+        message: "success",
+        status: 200,
+        data: tasks
+    })
+});
+
+app.get('/tasks/my_tasks', 
+    [
+        jwtRequired,
+        passUserFromJWT
+    ], async (req, res) => {
+    let tasks = await findAll({ UserId: req.user.id });
     return res.json({
         message: "success",
         status: 200,
