@@ -25,6 +25,7 @@ const skills_api = require("./lib/skills-api")
 const taskers_api = require("./lib/taskers-api");
 const offers_api = require("./lib/offers-api");
 const messages_api = require("./lib/messages-api");
+const posts_api = require("./lib/posts-api");
 const messages_ws = require("./lib/messages_ws");
 
 const app = express();
@@ -55,6 +56,7 @@ app.use("/api/v1", cities_api)
 app.use("/api/v1", skills_api)
 app.use("/api/v1", offers_api)
 app.use("/api/v1/", messages_api);
+app.use("/api/v1/", posts_api);
 
 
 // app.use("/api/v1",MainRouter)
