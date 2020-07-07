@@ -6,6 +6,7 @@ const passUserFromJWT = require("./passUserFromJWT")
 const passTaskerFromUser = require("./passTaskerFromUser");
 const requireAdminAccess = require("./requireAdminAccess")
 const allowCrossDomain = require("./allowCrossDomain");
+const adminRequired = require("./adminRequired");
 
 module.exports = {
     errorHandler,
@@ -15,5 +16,6 @@ module.exports = {
     passUserFromJWT,
     passTaskerFromUser,
     requireAdminAccess, 
-    allowCrossDomain
+    allowCrossDomain,
+    adminRequired
 }

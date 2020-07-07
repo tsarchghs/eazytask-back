@@ -55,6 +55,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false,
             allowNull: false
         },
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
+        },
         reason: DataTypes.TEXT,
         verification_token: DataTypes.TEXT
     }, options);

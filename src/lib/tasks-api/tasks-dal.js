@@ -38,6 +38,7 @@ module.exports = {
         if (filters["city"]) where["city"] = { [Sequelize.Op.like]: "%" + filters.city + "%" };
         if (filters["title"]) where["title"] = { [Sequelize.Op.like]: "%" + filters.title + "%" }; 
         if (filters["due_date"]) where["due_date"] = filters.due_date;
+        if (filters["UserId"]) where["UserId"] = filters.UserId;
         
         let expected_price_filter = {}
         if (filters["min_expected_price"]) expected_price_filter[Sequelize.Op.gte] = Number(filters["min_expected_price"])

@@ -18,25 +18,11 @@ const { findOne, findAll, createTask, countAll, patchTask } = require("./tasks-d
 
 const { ErrorHandler } = require("../../utils/error")
 
+const formatMulterAny = require("../utils/formatMulterAny");
+
 const multer = require('multer')
 const upload = multer();
 
-const formatMulterAny = files => {
-    console.log(files)
-    let obj = {}
-    for (let fileObj of files){
-        let { fieldname } = fileObj;
-        let isArray = fieldname.indexOf("[]") !== -1;
-        if (isArray) {
-            if (!obj[fieldname]) obj[fieldname] = []
-            obj[fieldname].push(fileObj)
-        } else {
-            obj[fieldname] = fileObj
-        }
-    }
-    console.log(obj,"objobj")
-    return obj;
-}
 
 const uploadMiddleware = upload.any()
 
