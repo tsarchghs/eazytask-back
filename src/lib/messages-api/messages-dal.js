@@ -10,7 +10,7 @@ module.exports = {
     createMessage: async (data,currentUserId) => {
         data.client_createdAt = new Date(data.client_createdAt);
         data.UserId = currentUserId;
-        let message = Message.create(data);
+        let message = await Message.create(data);
         return Message.findOne({ where: { id: message.id }});
     }
         
