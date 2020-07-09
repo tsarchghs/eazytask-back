@@ -1,5 +1,5 @@
 
-const { User, Tasker, Task, City } = require("../../models")
+const { User, Tasker, Task, City, Skill, Language } = require("../../models")
 
 const bcrypt = require("bcrypt")
 const { SALT_ROUNDS } = require("../../configs")
@@ -14,7 +14,7 @@ const cloneDeep = require("../utils/cloneDeep");
 const FIELD_MODEL = {
     tasker: { 
         model: Tasker,
-        include: City
+        include: [ Skill, City, Language ]
     }
 }
 
@@ -65,9 +65,12 @@ module.exports = {
     patchUser: async (id,patchFields) => {
         let user;
         if (typeof(id) === "string" && id.indexOf("@") !== -1) user = await findUserByEmail(id);
-        else user = await findUserByPk(id)
+        else user = await findUserByPk(id,undefined,"withPassword")
         if (!user) throw new ErrorHandler(404, "The resource you tried to update does not exist")
         if (patchFields.password) {
+            console.log(patchFields.old_password,user.password);
+            const match = await bcrypt.compare(patchFields.old_password,user.password);
+            if (!match) throw new ErrorHandler(404, "Old password is not correct")
             patchFields.password = await bcrypt.hash(patchFields.password, SALT_ROUNDS);
         }
         else patchFields.password = undefined // in case it's an empty string
