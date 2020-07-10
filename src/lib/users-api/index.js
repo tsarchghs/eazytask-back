@@ -15,6 +15,8 @@ const upload = multer();
 
 const jwt = require("jsonwebtoken");
 
+const email_manager = require("../email-manager");
+
 const uploadMiddleware = upload.fields([
     { name: 'profile_image', maxCount: 1 },
     { name: 'cover_image', maxCount: 1 }
@@ -34,6 +36,8 @@ app.post("/users/send_verification_code", validateRequest(post_send_verification
         }
         else throw err
     }
+    let emailData = email_manager.createForgetPasswordEmail({ to: email, code })
+    email_manager.sendEmail(emailData);
     console.log("Valid for 5 hours, Your code is: ", code)
     console.log("DEV: token is: ", token)
     return res.json({

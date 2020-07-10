@@ -68,9 +68,10 @@ module.exports = {
         else user = await findUserByPk(id,undefined,"withPassword")
         if (!user) throw new ErrorHandler(404, "The resource you tried to update does not exist")
         if (patchFields.password) {
-            console.log(patchFields.old_password,user.password);
-            const match = await bcrypt.compare(patchFields.old_password,user.password);
-            if (!match) throw new ErrorHandler(404, "Old password is not correct")
+            if (patchFields.old_password){
+                const match = await bcrypt.compare(patchFields.old_password,user.password);
+                if (!match) throw new ErrorHandler(404, "Old password is not correct")
+            }
             patchFields.password = await bcrypt.hash(patchFields.password, SALT_ROUNDS);
         }
         else patchFields.password = undefined // in case it's an empty string
