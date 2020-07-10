@@ -14,6 +14,6 @@ module.exports = async (file) => {
         ACL: "public-read"
     };
     await S3_BUCKET.upload(data, () => {})
-    console.log(`http://${process.env.S3_BUCKET}.s3.amazonaws.com/${key}`)
-    return `http://${process.env.S3_BUCKET}.s3.amazonaws.com/${key}`
+    console.log(`https://${process.env.S3_BUCKET}.s3.amazonaws.com/${key}`)
+    return `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${key}`
 }
