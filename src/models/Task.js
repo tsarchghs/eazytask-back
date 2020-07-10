@@ -29,8 +29,20 @@ module.exports = (sequelize, DataTypes) => {
         defaultScope: {
             where: {
                 status: {
-                    [Op.not]: "DELETED"
+                    [Op.and]: [
+                        {
+                            [Op.not]: "DELETED"
+                        },
+                        {
+                            [Op.not]: "DEACTIVATED"
+                        }
+                    ]
                 }
+            }
+        },
+        scopes: {
+            all: {
+                where: {}
             }
         },
         getterMethods: {
