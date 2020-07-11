@@ -4,7 +4,15 @@ const app = module.exports = express();
 
 const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
 
-const { post_users, patch_users, post_send_verification_code, post_reset_password, post_validate_verification_code } = require("./validations")
+const { 
+    post_users, 
+    patch_users, 
+    post_send_verification_code, 
+    post_reset_password, 
+    post_validate_verification_code,
+    post_send_phone_verification_code,
+    post_validate_phone_verification_code
+} = require("./validations")
 const { createUser, patchUser, findOne, findUserByEmail } = require("./users-dal")
 const createToken = require("../utils/createToken")
 const { ErrorHandler } = require("../../utils/error")
@@ -24,10 +32,64 @@ const uploadMiddleware = upload.fields([
 
 app.use(allowCrossDomain)
 
+app.post("/users/send_phone_verification_code", [
+    validateRequest(post_send_phone_verification_code),
+    jwtRequired,
+    passUserFromJWT
+], async (req, res) => {
+    let { phone_number } = req.body;
+    let code = Math.floor(100000 + Math.random() * 900000);
+    let token = createToken(null, { code, phone_number }, "5h",process.env.PHONE_JWT_SECRET)
+    try {
+        await patchUser(req.user.email, { phone_verification_token: token })
+    } catch (err) {
+        if (err.message === "The resource you tried to update does not exist") {
+            console.log("PASSING: The resource you tried to update does not exist")
+        }
+        else throw err
+    }
+    console.log(`[${phone_number}] Valid for 5 hours, Your code is: `, code)
+    console.log("DEV: token is: ", token)
+    return res.json({
+        message: "success",
+        code: 201
+    })
+})
+
+app.post("/users/validate_phone_verification_code", [
+    validateRequest(post_validate_phone_verification_code),
+    jwtRequired,
+    passUserFromJWT
+], async (req,res) => {
+    let { code } = req.body;
+    let user = await findUserByEmail(req.user.email, "withPhoneVerificationCode")
+    let decoded;
+    try {
+        decoded = jwt.verify(user.phone_verification_token, process.env.PHONE_JWT_SECRET)
+    } catch (err) {
+        if (err.name === "TokenExpiredError")
+            throw new ErrorHandler(401, "Code has expired", ["Verification code has expired."])
+    }
+    if (decoded.code !== code) throw new ErrorHandler(401, "Code is not correct", ["Verification code is not correct."])
+    try {
+        await patchUser(req.user.email, { phone_number: decoded.phone_number })
+    } catch (err) {
+        if (err.message === "The resource you tried to update does not exist") {
+            console.log("PASSING: The resource you tried to update does not exist")
+        }
+        else throw err
+    }
+    return res.json({
+        message: "success",
+        code: 200
+    })
+})
+
+
 app.post("/users/send_verification_code", validateRequest(post_send_verification_code), async (req, res) => {
     let { email } = req.body;
     let code = Math.floor(100000 + Math.random() * 900000);
-    let token = createToken(null, { code, email }, "5h")
+    let token = createToken(null, { code, email }, "5h",process.env.FORGET_PASSWORD_JWT_SECRET)
     try {
         await patchUser(email, { verification_token: token })
     } catch (err) {
@@ -52,7 +114,7 @@ app.post("/users/reset_password", validateRequest(post_reset_password), async (r
     if (!user) throw new ErrorHandler(404, "User not found");
     let decoded;
     try {
-        decoded = jwt.verify(user.verification_token, JWT_SECRET)
+        decoded = jwt.verify(user.verification_token, process.env.FORGET_PASSWORD_JWT_SECRET)
     } catch (err) {
         if (err.name === "TokenExpiredError")
             throw new ErrorHandler(401, "Code has expired", ["Verification code has expired."])
@@ -71,7 +133,7 @@ app.post("/users/validate_verification_code", validateRequest(post_validate_veri
     let decoded;
     if (!user) throw new ErrorHandler(401, "Code is not correct", ["2 Verification code is not correct."])
     try {
-        decoded = jwt.verify(user.verification_token, JWT_SECRET)
+        decoded = jwt.verify(user.verification_token, process.env.FORGET_PASSWORD_JWT_SECRET)
     } catch (err) {
         if (err.name === "TokenExpiredError")
             throw new ErrorHandler(401, "Code has expired", ["Verification code has expired."])

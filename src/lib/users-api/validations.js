@@ -45,4 +45,14 @@ module.exports = {
             code: yup.number().required().test("len", "code does not match required format", val => String(val).length === 6),
         })
     }),
+    post_send_phone_verification_code: yup.object().shape({
+        requestBody: yup.object().shape({
+            phone_number: yup.string().required()
+        })
+    }),
+    post_validate_phone_verification_code: yup.object().shape({
+        requestBody: yup.object().shape({
+            code: yup.number().required().test("len", "code does not match required format", val => String(val).length === 6),
+        })
+    })
 }

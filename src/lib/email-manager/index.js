@@ -13,8 +13,8 @@ let transporter = nodemailer.createTransport({
 module.exports = {
     createForgetPasswordEmail: ({to,code}) => {
         let from = "alerts@eazytask.ch"
-        let text = `Your verification code is: ${code}, valid for 5 hours.`
-        let html = `Your verification code is: ${code}<br/>Valid for 5 hours`
+        let text = `Your verification code is: ${code}`
+        let html = `Your verification code is: ${code}`
         let subject = "Eazytask: Forget password"
         return { from, to, subject, text, html }
     },
