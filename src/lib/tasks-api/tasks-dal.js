@@ -67,7 +67,7 @@ module.exports = {
         where.due_date = Sequelize.and(...and_due_date)
         return await Task.count({ where })
     },
-    findAll: async ({ limit, offset, category_id, ...filters}) => {
+    findAll: async ({ limit, offset, category_id, expired, ...filters},scope) => {
         let where = filters;
         if (where.category_id) {
             where["category"] = category_id;
@@ -90,7 +90,14 @@ module.exports = {
             }
             and_due_date.push(due_date);
         }
-        where.due_date = Sequelize.and(...and_due_date)
+        if (and_due_date.length){
+            where.due_date = Sequelize.and(...and_due_date)
+        }
+        if (expired){
+            where.due_date = {
+                [Sequelize.Op.lte]: moment()
+            }
+        }
 
         let expected_price_filter = {}
         if (filters["min_expected_price"]) expected_price_filter[Sequelize.Op.gte] = Number(filters["min_expected_price"])
@@ -106,8 +113,10 @@ module.exports = {
         if (category_id) include.push({
             model: Category, where: { id: category_id }
         })
-        console.log({ where })
-        let tasks = await Task.findAll({
+        console.log({ where }, scope, "SCOPE")
+        let instance = Task;
+        if (scope) instance = instance.scope(scope);
+        let tasks = await instance.findAll({
             include,
             where: (delete where["fields"] && where),
             limit: Number(limit) || null,
@@ -115,9 +124,9 @@ module.exports = {
         })
         return tasks
     },
-    findOne: async (taskId,options = {}) => {
-        console.log(getModelsFromFields(FIELD_MODEL,options.fields),"INCLUDE")
-        let task = await Task.findOne({ 
+    findOne: async (taskId,options = {},scope) => {
+        console.log(scope || "allNonDeleted")
+        let task = await Task.scope(scope || "allNonDeleted").findOne({ 
             where: { id: taskId },
             include: options.fields && getModelsFromFields(FIELD_MODEL,options.fields),
         })

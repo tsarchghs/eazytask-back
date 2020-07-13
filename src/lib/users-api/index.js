@@ -133,7 +133,7 @@ app.post("/users/validate_verification_code", validateRequest(post_validate_veri
     let { email, code } = req.body;
     let user = await findUserByEmail(email, "withVerificationCode")
     let decoded;
-    if (!user) throw new ErrorHandler(401, "Code is not correct", ["2 Verification code is not correct."])
+    if (!user || !user.verification_token) throw new ErrorHandler(401, "Code is not correct", ["2 Verification code is not correct."])
     try {
         decoded = jwt.verify(user.verification_token, process.env.FORGET_PASSWORD_JWT_SECRET)
     } catch (err) {

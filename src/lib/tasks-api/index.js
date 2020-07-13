@@ -59,6 +59,21 @@ app.get('/tasks/my_tasks',
     })
 });
 
+app.get('/tasks/my_history', 
+    [
+        jwtRequired,
+        passUserFromJWT
+    ], async (req, res) => {
+    let tasks = await findAll({ UserId: req.user.id },"history");
+    console.log("HISTORY_TASKS",tasks.length)
+    return res.json({
+        message: "success",
+        status: 200,
+        data: tasks
+    })
+});
+
+
 app.get('/tasks/:taskId', validateRequest(get_taskId,false), async (req, res) => {
     let tasks = await findOne(Number(req.params.taskId),req.query);
     return res.json({
@@ -79,7 +94,7 @@ app.patch('/tasks/:taskId',
             .catch(err => { throw new ErrorHandler(403, "Validation error", err.errors) })
         console.log(req.body,req.query,req.files,199)
         let files = req.files ? formatMulterAny(req.files) : undefined; 
-        let task = await findOne(req.params.taskId)
+        let task = await findOne(req.params.taskId,{},"all")
         if (task.UserId !== req.user.id) throw new ErrorHandler(401,"Unauthorized")
         task = await patchTask(task,{
             ...req.body,

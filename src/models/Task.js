@@ -3,6 +3,8 @@
 const { NonNullString, NonNullStatusField } = require("./common")
 const { Op } = require("sequelize");
 
+const moment = require("moment")
+
 module.exports = (sequelize, DataTypes) => {
     let Task = sequelize.define("Task", {
         thumbnail: DataTypes.TEXT,
@@ -24,7 +26,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: true
         },
-        status: NonNullStatusField(DataTypes.ENUM)
+        status: {
+            type: DataTypes.ENUM("ACTIVE", "DEACTIVATED", "DELETED"),
+            default: "ACTIVE",
+            allowNull: false
+        }
     },{
         defaultScope: {
             where: {
@@ -37,12 +43,32 @@ module.exports = (sequelize, DataTypes) => {
                             [Op.not]: "DEACTIVATED"
                         }
                     ]
+                },
+                due_date: {
+                    [Op.gte]: moment()
                 }
             }
         },
         scopes: {
             all: {
                 where: {}
+            },
+            history: {
+                where: {
+                    [Op.or]: [
+                        {
+                            status: { [Op.not]: "ACTIVE" },
+                        },
+                        {
+                            due_date: {
+                                [Op.lte]: moment()
+                            }
+                        }
+                    ]
+                }
+            },
+            allNonDeleted: {
+                where: { status: { [Op.not]: "DELETED" } }
             }
         },
         getterMethods: {
