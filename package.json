@@ -50,6 +50,7 @@
     "sequelize-admin": "0.0.0",
     "socket.io": "^2.3.0",
     "swagger-ui-express": "4.1.4",
+    "twilio": "^3.48.0",
     "yup": "0.28.5"
   },
   "devDependencies": {
