@@ -24,6 +24,7 @@ const upload = multer();
 const jwt = require("jsonwebtoken");
 
 const email_manager = require("../email-manager");
+const phone_manager = require("../phone-manager");
 
 const uploadMiddleware = upload.fields([
     { name: 'profile_image', maxCount: 1 },
@@ -48,6 +49,7 @@ app.post("/users/send_phone_verification_code", [
         }
         else throw err
     }
+    phone_manager.sendPhoneVerificationCodeSMS({ to: phone_number, code })
     console.log(`[${phone_number}] Valid for 5 hours, Your code is: `, code)
     console.log("DEV: token is: ", token)
     return res.json({
