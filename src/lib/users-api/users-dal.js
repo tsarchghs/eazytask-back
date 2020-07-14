@@ -39,7 +39,7 @@ module.exports = {
             throw new ErrorHandler(404, "Not found", [`User not found`])
         }
         if (getTasks){
-            let tasks = await Task.findAll({ where: { UserId: user.id }});
+            let tasks = await Task.scope("allNonDeleted").findAll({ where: { UserId: user.id }});
             user = cloneDeep(user);
             user.tasks = tasks;
         }

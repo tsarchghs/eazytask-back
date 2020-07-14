@@ -58,7 +58,7 @@ module.exports = {
         due_date_type: yup.string().oneOf(["FIXED_DATE", "UNTIL_DATE"]),
         due_date: yup.date(),
         expected_price: yup.number(),
-        status: yup.string().oneOf(["ACTIVE", "DEACTIVATED", "ACCEPTED"])
+        status: yup.string().oneOf(["ACTIVE", "DEACTIVATED", "DELETED"])
     }),
     delete_tasks: yup.object().shape({
         params: yup.object().shape({
