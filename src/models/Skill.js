@@ -3,6 +3,13 @@
 const { NonNullString } = require("./common")
 
 module.exports = (sequelize, DataTypes) => {
+    let options = {
+        defaultScope: {
+            where: {
+                createdByUser: false
+            }
+        }
+    }
     let Skill = sequelize.define("Skill",{
         name: NonNullString(DataTypes.STRING),
         createdByUser: { 
@@ -10,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: false
         }
-    })
+    },options)
     Skill.associate = models => {
     Skill.belongsToMany(
             models.Tasker, 
