@@ -31,7 +31,7 @@ const FIELD_MODEL = {
 
 
 module.exports = {
-    countAll: async filters => {
+    countAll: async (filters, scope) => {
         let where = {}
         console.log(filters)
         if (filters["category_id"]) where["CategoryId"] = filters.category_id;
@@ -64,8 +64,12 @@ module.exports = {
             and_due_date.push(due_date);
             delete where["expire_soon"]
         }
-        where.due_date = Sequelize.and(...and_due_date)
-        return await Task.count({ where })
+        if (and_due_date.length) where.due_date = Sequelize.and(...and_due_date)
+
+        let instance = Task;
+        if (scope) instance = instance.scope(scope);
+        console.log("SCOPEEEE",scope,where)
+        return await instance.count({ where })
     },
     findAll: async ({ limit, offset, category_id, expired, ...filters},scope) => {
         let where = filters;
@@ -113,7 +117,7 @@ module.exports = {
         if (category_id) include.push({
             model: Category, where: { id: category_id }
         })
-        console.log({ where }, scope, "SCOPE")
+        console.log({ where }, scope, "SCOPE5555")
         let instance = Task;
         if (scope) instance = instance.scope(scope);
         let tasks = await instance.findAll({
