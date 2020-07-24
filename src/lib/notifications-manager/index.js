@@ -7,7 +7,10 @@ const phoneManager = require("../phone-manager");
 const emailNotifications = require("./email-notifications")
 const smsNotifications = require("./sms-notifications")
 
-const sendNotificationSMS = async params => {
+const sendNotificationSMS = async ({ type, ...params }) => {
+    let smsContent = smsNotifications[type](params)
+    console.log("SENDING", smsContent)
+    phoneManager.sendSMS(smsContent)
 }
 
 const sendNotificationEmail = async ({ type, ...params}) => {
@@ -18,10 +21,10 @@ const sendNotificationEmail = async ({ type, ...params}) => {
 
 const _sendNotification = async (params,notification) => {
     let { notification_option } = params.user_1;
-    switch (notification_option) {
-        case "SMS": await sendNotificationSMS(params);
-        case "EMAIL": await sendNotificationEmail(params);
-    }
+    if (notification_option === "SMS") 
+        await sendNotificationSMS(params);
+    else if (notification_option === "EMAIL")
+        await sendNotificationEmail(params);
     notification.update({ sent: true })
 }
 
@@ -34,7 +37,6 @@ const handleNewChatMessageNotifications = async params => {
         if (chat_watchers.indexOf(msg.UserId) === -1)
             chat_watchers.push(msg.UserId)
     let user_2 = await User.findByPk(params.user_2_id) 
-    console.log("chat_watchers",chat_watchers)
     for (let user_id of chat_watchers.filter((v,i) => chat_watchers.indexOf(v) === i)) {
         let notification = await Notification.create({
             type: "NEW_CHAT_MESSAGE",
@@ -53,7 +55,6 @@ const handleNewChatMessageNotifications = async params => {
 }
 
 const handleOfferReceivedNotification = async ({ type, ...params }) => {
-    console.log("handleOfferReceivedNotification",params)
     let task = await Task.findByPk(params.task_id)
     params.user_1_id = task.UserId;
     let notification = await Notification.create({
@@ -96,7 +97,6 @@ const handleNotification = async params => {
 
 const sendNotification = async ({ type, user_1_id, user_2_id, task_id }) => {
     let params = { type, user_1_id, user_2_id, task_id }
-    console.log("sendNotification",params);
     return await handleNotification(params);
 }
 

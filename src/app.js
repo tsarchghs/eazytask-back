@@ -26,6 +26,7 @@ const taskers_api = require("./lib/taskers-api");
 const offers_api = require("./lib/offers-api");
 const messages_api = require("./lib/messages-api");
 const posts_api = require("./lib/posts-api");
+const notifications_api = require("./lib/notifications-api");
 const statistics_api = require("./lib/statistics-api");
 const messages_ws = require("./lib/messages_ws");
 
@@ -58,6 +59,7 @@ app.use("/api/v1", skills_api)
 app.use("/api/v1", offers_api)
 app.use("/api/v1/", messages_api);
 app.use("/api/v1/", posts_api);
+app.use("/api/v1/", notifications_api);
 app.use("/api/v1/", statistics_api);
 
 // app.use("/api/v1",MainRouter)

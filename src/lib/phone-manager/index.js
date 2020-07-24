@@ -12,7 +12,7 @@ const getPhoneVerificationCodeSMS = ({ code, to }) => {
 
 const sendSMS = async ({ body, from, to }) => {
     return await client.messages.create({
-        body, from, to
+        body, from: from || process.env.TWILIO_NUMBER, to
     })
 }
 
