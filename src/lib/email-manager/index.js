@@ -19,6 +19,12 @@ module.exports = {
         return { from, to, subject, text, html }
     },
     sendEmail: async ({from,to,subject,text,html}) => {
-        return await transporter.sendMail({ from, to, subject, text, html });
+        return await transporter.sendMail({ 
+            from: from || "alerts@eazytask.ch",
+            to,
+            subject,
+            text,
+            html 
+        });
     }
 }

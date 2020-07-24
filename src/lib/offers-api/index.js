@@ -14,7 +14,10 @@ const { get_offers, get_offers_id, post_offers, accept_offer } = require("./vali
 
 const { findAll, createOffer, findByTaskerAndTask, findOne, acceptOffer } = require("./offers-dal");
 
-const { ErrorHandler } = require("../../utils/error")
+const { ErrorHandler } = require("../../utils/error");
+const notificationsManager = require("../notifications-manager");
+
+const { Offer, Tasker } = require("../../models")
 
 app.use(allowCrossDomain)
 
@@ -35,12 +38,29 @@ app.get('/offers/:offerId', validateRequest(get_offers_id, false), async (req, r
     })
 });
 
-app.post('/tasks/:taskId/offers/:offerId/accept', validateRequest(accept_offer, false), async (req, res) => {
+app.post('/tasks/:taskId/offers/:offerId/accept', [
+    validateRequest(accept_offer, false),
+    jwtRequired,
+    passUserFromJWT,
+], async (req, res) => {
     let { taskId, offerId } = req.params;
+    taskId = Number(taskId);
+    offerId = Number(offerId);
     let offer = await acceptOffer({ 
-        taskId: Number(taskId), 
-        offerId: Number(offerId), 
+        taskId: taskId, 
+        offerId: offerId, 
         currentUser: req.user
+    })
+    let user_2_id = req.user.id;
+    Offer.findByPk(offerId).then(offer => {
+        Tasker.findByPk(offer.TaskerId).then(tasker => {
+            notificationsManager.sendNotification({
+                type: "OFFER_ACCEPTED",
+                user_1_id: tasker.UserId,
+                user_2_id: user_2_id,
+                task_id: taskId
+            })
+        })
     })
     return res.json({
         message: "success",
@@ -62,6 +82,11 @@ app.post("/offers",[
             TaskId: req.body.taskId,
             fields: req.query.fields,
             ...req.body,
+        })
+        notificationsManager.sendNotification({
+            type: "OFFER_RECEIVED",
+            user_2_id: req.user.id,
+            task_id: req.body.taskId
         })
         return res.json({
             message: "success",

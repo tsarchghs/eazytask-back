@@ -1,7 +1,6 @@
 
 module.exports = server => {
     const io = require("socket.io")(server);
-    console.log(123)
     io.on("connection", socket => {
         console.log("ON_CONNECTION")
         
