@@ -20,7 +20,7 @@ module.exports = {
         address: yup.string(),
         city: yup.string(),
         first_name: yup.string().min(2),
-        lastname: yup.string().min(2),
+        last_name: yup.string().min(2),
         password,
         setupCompleted: yup.bool(),
         deleted: yup.bool(),

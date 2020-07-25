@@ -11,10 +11,16 @@ const uploadFile = require("../aws/uploadFile");
 const getModelsFromFields = require("../utils/getModelsFromFields");
 const cloneDeep = require("../utils/cloneDeep");
 
+const { createTasker } = require("../taskers-api/taskers-dal");
+
 const FIELD_MODEL = {
-    tasker: { 
+    tasker: {
         model: Tasker,
-        include: [ Skill, City, Language ]
+        include: [
+            { model: Skill, required: false }, 
+            { model: City, required: false },
+            { model: Language, required: false }
+        ]
     }
 }
 
@@ -31,6 +37,10 @@ module.exports = {
         if (options.fields) 
             options.fields = options.fields.split(",").filter(x => x != "task").join(",")
         console.log("options.fields",options.fields)
+        console.log({
+            where: { id: userId },
+            include: options.fields && getModelsFromFields(FIELD_MODEL, options.fields),
+        })
         let user = await User.findOne({
             where: { id: userId },
             include: options.fields && getModelsFromFields(FIELD_MODEL, options.fields),
@@ -67,6 +77,10 @@ module.exports = {
         if (typeof(id) === "string" && id.indexOf("@") !== -1) user = await findUserByEmail(id);
         else user = await findUserByPk(id,undefined,"withPassword")
         if (!user) throw new ErrorHandler(404, "The resource you tried to update does not exist")
+        if (patchFields.isTasker) {
+            let tasker = await Tasker.findOne({ where: { UserId: user.id }})
+            if (!tasker) await createTasker({ userId: user.id, skills: [], languages: [], cities: [] })
+        }
         if (patchFields.password) {
             if (patchFields.old_password){
                 const match = await bcrypt.compare(patchFields.old_password,user.password);

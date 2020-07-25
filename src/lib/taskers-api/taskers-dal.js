@@ -14,8 +14,9 @@ module.exports = {
         let tasker = await Tasker.findOne({where:{"UserId": userId}});
         return tasker;
     },
-    createTasker: async ({userId,area_of_activity,skills,languages,cities}) => {
-        let data = { UserId: userId, area_of_activity }
+    createTasker: async ({userId,skills,languages,cities}) => {
+        console.log({ userId, skills, languages, cities })
+        let data = { UserId: userId }
 
         let city_instances = []
         let language_instances = [] 

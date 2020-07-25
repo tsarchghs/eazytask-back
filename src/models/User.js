@@ -48,17 +48,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM("SMS", "EMAIL"),
             allowNull: false
         },
-        isAdmin: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            allowNull: false
-        },
         deleted: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false
         },
         isAdmin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
+        },
+        isTasker: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false

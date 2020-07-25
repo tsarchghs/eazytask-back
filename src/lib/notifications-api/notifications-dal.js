@@ -1,8 +1,43 @@
 
-const { Notification, Task } = require("../../models");
+const { Notification, Task, User } = require("../../models");
 const { ErrorHandler } = require("../../utils/error")
 
+let includeAllRelations = [
+    {
+        model: User,
+        as: "user_1"
+    },
+    {
+        model: User,
+        as: "user_2"
+    },
+    {
+        model: Task,
+        as: "task"
+    }
+]
 module.exports = {
+    findAll: async ({ user_id }) =>  {
+        return Notification.findAll({ 
+            where: { user_1_id: user_id },
+            order: [
+                ['createdAt', 'DESC']
+            ],
+            include: includeAllRelations
+        })
+    },
+    getDashboardNotifications: async ({ user_id }) => {
+        let notifications = await Notification.findAll({
+            where: { user_1_id: user_id },
+            limit: 5,
+            order: [ 
+                ['createdAt', 'DESC']
+            ],
+            include: includeAllRelations
+
+        })
+        return notifications;
+    },
     findLatestOfferReceivedNotification: async ({ task_id }) => {
         let notification = await Notification.findOne({
             where: {

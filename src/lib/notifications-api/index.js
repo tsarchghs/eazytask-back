@@ -9,10 +9,34 @@ const {
 
 const { 
     findLatestOfferReceivedNotification,
-    findLatestOfferReceivedNotificationGeneral 
+    findLatestOfferReceivedNotificationGeneral,
+    getDashboardNotifications,
+    findAll
 } = require("./notifications-dal");
 
 app.use(allowCrossDomain)
+
+app.get("/notifications", [
+    jwtRequired, passUserFromJWT
+], async (req,res) => {
+    let notifications = await findAll({ user_id: req.user.id })
+    return res.json({
+        message: "success",
+        status: 200,
+        data: notifications
+    })   
+})
+
+app.get("/get_dashboard_notifications", [
+    jwtRequired, passUserFromJWT
+], async (req, res) => {
+    let notifications = await getDashboardNotifications({ user_id: req.user.id })
+    return res.json({
+        message: "success",
+        status: 200,
+        data: notifications
+    })
+})
 
 app.get("/get_latest_offer_received_notification/:task_id", [
     validateRequest(get_latest_offer_received_notification_validation, false),
