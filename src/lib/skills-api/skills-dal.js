@@ -3,5 +3,5 @@ const { Skill } = require("../../models")
 
 
 module.exports = {
-    findAll: async () => (await Skill.findAll()),
+    findAll: async () => (await Skill.findAll({ where: { createdByUser: false } })),
 }

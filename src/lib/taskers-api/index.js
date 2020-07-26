@@ -2,9 +2,17 @@ const express = require("express");
 const app = module.exports = express();
 
 const { allowCrossDomain, validateRequest, jwtRequired, passUserFromJWT } = require("../../middlewares");
-const { get_taskerId, post_taskers } = require("./validations");
+const { get_taskerId, post_taskers, patch_taskers } = require("./validations");
 
-const { findTaskerByPk, findOne, createTasker } = require("./taskers-dal");
+const { 
+    findTaskerByPk, 
+    findOne, 
+    createTasker,
+    updateTaskerSkills,
+    updateTaskerLanguages,
+    updateTaskerCities,
+    findTaskerByUserPk
+} = require("./taskers-dal");
 
 const { ErrorHandler } = require("../../utils/error");
 
@@ -19,6 +27,25 @@ app.get("/taskers/:taskerId", [
     if (!tasker) 
         throw new ErrorHandler(404, "Not found", [`Tasker not found`])
     tasker = cloneDeep(tasker)
+    return res.json({
+        status: 200,
+        message: "success",
+        data: tasker
+    })
+})
+
+app.patch("/taskers/:taskerId",[
+    validateRequest(patch_taskers),
+    jwtRequired,
+    passUserFromJWT
+], async (req,res) => {
+    let { cities, languages, skills } = req.body
+    console.log("ON_REQ_BODY",req.body)
+    let tasker = await findTaskerByPk(req.params.taskerId)
+    if (!tasker) throw new Error("Failed findTaskerByUserPk")
+    if (languages) tasker = await updateTaskerLanguages({ taskerId: tasker.id, languages})
+    if (skills) tasker = await updateTaskerSkills({ taskerId: tasker.id, skills})
+    if (cities) tasker = await updateTaskerCities({ taskerId: tasker.id, cities})
     return res.json({
         status: 200,
         message: "success",

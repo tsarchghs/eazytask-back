@@ -4,11 +4,11 @@ const { NonNullString } = require("./common")
 
 module.exports = (sequelize, DataTypes) => {
     let options = {
-        defaultScope: {
-            where: {
-                createdByUser: false
-            }
-        }
+        // defaultScope: {
+        //     where: {
+        //         createdByUser: false
+        //     }
+        // }
     }
     let Language = sequelize.define("Language",{
         name: NonNullString(DataTypes.STRING),

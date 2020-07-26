@@ -17,5 +17,12 @@ module.exports = {
             languages: stringArray,
             skills: stringArray,
         })
-    })
+    }),
+    patch_taskers: yup.object().shape({
+        requestBody: yup.object().shape({
+            cities: stringArray,
+            languages: stringArray,
+            skills: stringArray,
+        })
+    }),
 }
