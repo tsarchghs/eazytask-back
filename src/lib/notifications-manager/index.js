@@ -84,7 +84,21 @@ const handleOfferAcceptedNotification = async params => {
     contentParams.user_2 = await User.findByPk(params.user_2_id) 
     contentParams.task = await Task.findByPk(params.task_id) 
     _sendNotification(contentParams,notification)
+}
 
+const handleAfterOfferAcceptedNotification = async params => {
+    let notification = await Notification.create({
+        type: "AFTER_OFFER_ACCEPTED",
+        user_1_id: params.user_1_id,
+        user_2_id: params.user_2_id,
+        task_id: params.task_id
+    })
+    let contentParams = {}
+    contentParams.type = params.type;
+    contentParams.user_1 = await User.findByPk(params.user_1_id)
+    contentParams.user_2 = await User.findByPk(params.user_2_id)
+    contentParams.task = await Task.findByPk(params.task_id)
+    _sendNotification(contentParams, notification)
 }
 
 const handleNotification = async params => {
@@ -92,6 +106,7 @@ const handleNotification = async params => {
         case "NEW_CHAT_MESSAGE": return await handleNewChatMessageNotifications(params);
         case "OFFER_RECEIVED": return await handleOfferReceivedNotification(params)
         case "OFFER_ACCEPTED": return await handleOfferAcceptedNotification(params);
+        case "AFTER_OFFER_ACCEPTED": return await handleAfterOfferAcceptedNotification(params);
     }
 }
 

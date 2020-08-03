@@ -10,9 +10,10 @@ const cloneDeep = require("../utils/cloneDeep")
 const getModelsFromFields = require("../utils/getModelsFromFields");
 
 const moment = require("moment");
+const emailManager = require("../email-manager");
 
 const FIELD_MODEL = {
-    user: User,
+    user: { model: User, where: { deleted: false } },
     offers: {
         model: Offer,
         include: [ 
@@ -167,13 +168,20 @@ module.exports = {
         if (!category_obj) category_obj = await createCategory({
             name: category, createdByUser: true
         })
-        return await Task.create({
+        let task = await Task.create({
             UserId: user_id,
             CategoryId: category_obj.id,
             thumbnail: thumbnail && await uploadFile(thumbnail), gallery,
             title, description, due_date_type, 
             due_date, expected_price, address, zipCode, city, status: "ACTIVE"
         })
+        let subject = "Eazytask: Admin notification"
+        let text = `Task created: ${process.env.BASE_LINK}/task/${task.id}` 
+        emailManager.sendEmail({
+            to: "gjergjk71@gmail.com", subject,
+            text, html: text
+        })
+        return task;
     },
     patchTask: async (task,patchFields) => {
         let { gallery, category, thumbnail, remove_thumbnail, remove_gallery } = patchFields

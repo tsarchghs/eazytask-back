@@ -60,6 +60,18 @@ app.post('/tasks/:taskId/offers/:offerId/accept', [
                 user_2_id: user_2_id,
                 task_id: taskId
             })
+            notificationsManager.sendNotification({
+                type: "AFTER_OFFER_ACCEPTED",
+                user_1_id: tasker.UserId,
+                user_2_id: user_2_id,
+                task_id: taskId
+            })
+            notificationsManager.sendNotification({
+                type: "AFTER_OFFER_ACCEPTED",
+                user_1_id: user_2_id,
+                user_2_id: tasker.UserId,
+                task_id: taskId
+            })
         })
     })
     return res.json({

@@ -17,7 +17,7 @@ module.exports = {
                 {
                     model: Tasker,
                     where: { UserId },
-                    include: [ User ]
+                    include: [ { model: User, where: { deleted: false } } ]
                 },
                 Task
             ]

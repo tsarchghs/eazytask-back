@@ -12,6 +12,19 @@ module.exports = {
         html: `${user_2.first_name} ${user_2.last_name[0]} accepted your offer for “${task.title}”`,
         subject: `Eazytask: Offer accepted for “${task.title}”`
     }),
+    "AFTER_OFFER_ACCEPTED": ({ user_1, user_2, task }) => {
+        let text = `Contact Information for ${user_2.first_name} ${user_2.last_name[0]}. :<br/>`
+        text += `Number: ${user_2.phone_number}<br/>
+        Email: ${user_2.email}<br/>
+        Address: ${user_2.address}<br/>
+        `
+        return {
+            text: text,
+            html: text,
+            to: user_1.email,
+            subject: "Eazytask: Contact information exchange"
+        }
+    },
     "NEW_CHAT_MESSAGE": ({ user_1, user_2, task }) => {
         let isAnswer = task.UserId === user_2.id;
         if (isAnswer) {

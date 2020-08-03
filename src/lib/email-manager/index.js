@@ -21,6 +21,7 @@ module.exports = {
     sendEmail: async ({from,to,subject,text,html}) => {
         return await transporter.sendMail({ 
             from: from || "alerts@eazytask.ch",
+            replyTo: "support@eazytask.ch",
             to,
             subject,
             text,

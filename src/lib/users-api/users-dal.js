@@ -12,6 +12,9 @@ const getModelsFromFields = require("../utils/getModelsFromFields");
 const cloneDeep = require("../utils/cloneDeep");
 
 const { createTasker } = require("../taskers-api/taskers-dal");
+const emailManager = require("../email-manager");
+
+const uuid = require("uuid");
 
 const FIELD_MODEL = {
     tasker: {
@@ -73,10 +76,39 @@ module.exports = {
         return createdUser
     },
     patchUser: async (id,patchFields) => {
+        console.log("AAAAAAAAA")
         let user;
         if (typeof(id) === "string" && id.indexOf("@") !== -1) user = await findUserByEmail(id);
         else user = await findUserByPk(id,undefined,"withPassword")
         if (!user) throw new ErrorHandler(404, "The resource you tried to update does not exist")
+        console.log(patchFields.isTasker, typeof(patchFields.isTasker),"patchFields.isTasker")
+        let afterUpdate;
+        if (patchFields.deleted) {
+            patchFields.email = user.email + "-" + uuid.v1()
+        }
+        if (patchFields.isTasker !== undefined) {
+            let send = async (id, isTasker, setupCompleted) => {
+                let user = await User.findOne({ where: { id }, include: [ FIELD_MODEL.tasker ] })
+                let subject = "Eazytask: Admin notification"
+                let text = `${user.first_name} ${user.last_name} `
+                let wording = setupCompleted ? "account created as " : "switched to "
+                if (isTasker === "true") text += wording + "tasker"
+                else text += wording + "asker"
+                text += `
+                <br/> Info: <br/>
+                    Skills: ${(user.Tasker.Skills || []).map(x => x.name).join(", ")}<br/>
+                    Languages: ${(user.Tasker.Languages || []).map(x => x.name).join(", ")}<br/>
+                    Cities: ${(user.Tasker.Cities || []).map(x => x.name).join(", ")}<br/>
+                `
+                console.log({ subject, text })
+                emailManager.sendEmail({
+                    to: "gjergjk71@gmail.com",
+                    subject,
+                    text, html: text,
+                })
+            }
+            afterUpdate = async () => await send(id, patchFields.isTasker, patchFields.setupCompleted);
+        }
         if (patchFields.isTasker) {
             let tasker = await Tasker.findOne({ where: { UserId: user.id }})
             if (!tasker) await createTasker({ userId: user.id, skills: [], languages: [], cities: [] })
@@ -91,7 +123,9 @@ module.exports = {
         else patchFields.password = undefined // in case it's an empty string
         if (patchFields.profile_image) patchFields.profile_image = await uploadFile(patchFields.profile_image)
         if (patchFields.cover_image) patchFields.cover_image = await uploadFile(patchFields.cover_image)
-        return await user.update({ ...patchFields, id: undefined })
+        await user.update({ ...patchFields, id: undefined })
+        if (afterUpdate) afterUpdate();
+        return user;
     }
 
 }

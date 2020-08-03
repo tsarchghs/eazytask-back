@@ -3,7 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
     let Notification = sequelize.define("Notification",{
         type: {
-            type: DataTypes.ENUM("NEW_CHAT_MESSAGE", "OFFER_RECEIVED", "OFFER_ACCEPTED"),
+            type: DataTypes.ENUM("NEW_CHAT_MESSAGE", "OFFER_RECEIVED", "OFFER_ACCEPTED", "AFTER_OFFER_ACCEPTED"),
             allowNull: false
         },
         read: {
@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false,
             allowNull: false
         },
+    }, {
+        defaultScope: { 
+            where: { 
+                type: { 
+                    [sequelize.Sequelize.Op.not]: "AFTER_OFFER_ACCEPTED" 
+                } 
+            }
+        }
     })
     Notification.associate = models => {
         Notification.belongsTo(models.User, {
