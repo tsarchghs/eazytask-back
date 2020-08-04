@@ -14,7 +14,7 @@ const cloneDeep = require("../utils/cloneDeep");
 const { createTasker } = require("../taskers-api/taskers-dal");
 const emailManager = require("../email-manager");
 
-const { v4: uuidv4 }  = require("uuid").v4;
+const { v4: uuidv4 }  = require("uuid");
 
 const FIELD_MODEL = {
     tasker: {
