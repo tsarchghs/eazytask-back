@@ -102,7 +102,7 @@ module.exports = {
                 `
                 console.log({ subject, text })
                 emailManager.sendEmail({
-                    to: "gjergjk71@gmail.com",
+                    to: "hello@eazytask.ch",
                     subject,
                     text, html: text,
                 })

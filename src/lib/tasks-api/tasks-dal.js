@@ -178,7 +178,7 @@ module.exports = {
         let subject = "Eazytask: Admin notification"
         let text = `Task created: ${process.env.BASE_LINK}/task/${task.id}` 
         emailManager.sendEmail({
-            to: "gjergjk71@gmail.com", subject,
+            to: "hello@eazytask.ch", subject,
             text, html: text
         })
         return task;
