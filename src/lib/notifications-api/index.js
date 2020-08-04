@@ -11,7 +11,8 @@ const {
     findLatestOfferReceivedNotification,
     findLatestOfferReceivedNotificationGeneral,
     getDashboardNotifications,
-    findAll
+    findAll,
+    patchNotification
 } = require("./notifications-dal");
 
 app.use(allowCrossDomain)
@@ -25,6 +26,14 @@ app.get("/notifications", [
         status: 200,
         data: notifications
     })   
+})
+
+app.post("/read_notification/:notification_id", [
+    jwtRequired, passUserFromJWT
+], async (req,res) => {
+    let { notification_id } = req.params;
+    let notification = await patchNotification(notification_id, { read: true });
+    return notification;
 })
 
 app.get("/get_dashboard_notifications", [

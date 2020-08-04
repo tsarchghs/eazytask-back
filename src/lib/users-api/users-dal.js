@@ -126,6 +126,11 @@ module.exports = {
         await user.update({ ...patchFields, id: undefined })
         if (afterUpdate) afterUpdate();
         return user;
+    },
+    verifyAccount: async user_id => {
+        let user = await User.findOne({ where: { id: user_id }});
+        user = await user.update({ email_verified: true });
+        return user;
     }
 
 }

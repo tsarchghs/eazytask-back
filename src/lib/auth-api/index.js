@@ -29,6 +29,8 @@ app.get('/auth', jwtRequired, async (req, res) => {
 
 app.post('/auth', validateRequest(post_auth), async (req, res) => {
     let user = await validateCredentials(req.body)
+    console.log("TOKEN: " + createToken(user.id))
+    if (!user.email_verified) throw new ErrorHandler(401, "Account not verified", [ "Please verify your email address."])
     return res.json(getResponse(user))
 });
 

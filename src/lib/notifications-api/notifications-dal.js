@@ -68,5 +68,10 @@ module.exports = {
         if (!notification)
             throw new ErrorHandler(404, "Not found", [`Notification not found`])
         return notification;
+    },
+    patchNotification: async (notification_id, patchFields) => {
+        let notification = await Notification.findOne({ where: { id: notification_id }});
+        notification = await notification.update(patchFields);
+        return notification;
     }
 }

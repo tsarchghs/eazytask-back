@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
     }
     let User = sequelize.define('User', {
         email: NonNullUniqueString(DataTypes.STRING),
+        email_verified: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
+        },
         password: {
             ...NonNullString(DataTypes.STRING),
         },

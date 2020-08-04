@@ -13,7 +13,7 @@ const {
     post_send_phone_verification_code,
     post_validate_phone_verification_code
 } = require("./validations")
-const { createUser, patchUser, findOne, findUserByEmail } = require("./users-dal")
+const { createUser, patchUser, findOne, findUserByEmail, verifyAccount } = require("./users-dal")
 const createToken = require("../utils/createToken")
 const { ErrorHandler } = require("../../utils/error")
 const { JWT_SECRET } = require("../../configs")
@@ -25,6 +25,7 @@ const jwt = require("jsonwebtoken");
 
 const email_manager = require("../email-manager");
 const phone_manager = require("../phone-manager");
+const emailManager = require("../email-manager");
 
 const uploadMiddleware = upload.fields([
     { name: 'profile_image', maxCount: 1 },
@@ -157,8 +158,21 @@ app.get("/users/:userId", async (req, res) => {
     })
 })
 
+app.post("/verify_account/:token", async (req,res) => {
+    let decoded = jwt.decode(req.params.token);
+    let user = await verifyAccount(decoded.userId)
+    return res.json({ code: 200, message: "success" })
+})
+
 app.post("/users", validateRequest(post_users), async (req, res) => {
     let user = await createUser(req.body);
+    let email = { to: user.email, subject: "Eazytask: Account Verification" };
+    let token = createToken(user.id)
+    let url = `${process.env.BASE_URL}/verify_account/${token}`
+    let text = `Click on this link to verify your account (Valid for 1 hour): ${url}`
+    email.text = text; email.html = text;
+    console.log(email)
+    await emailManager.sendEmail(email)
     return res.json({
         message: "success",
         code: 201,
