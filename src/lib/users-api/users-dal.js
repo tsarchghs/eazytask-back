@@ -14,7 +14,7 @@ const cloneDeep = require("../utils/cloneDeep");
 const { createTasker } = require("../taskers-api/taskers-dal");
 const emailManager = require("../email-manager");
 
-const uuidv1 = require("uuid").v1;
+const { v4: uuidv4 }  = require("uuid").v4;
 
 const FIELD_MODEL = {
     tasker: {
@@ -84,7 +84,7 @@ module.exports = {
         console.log(patchFields.isTasker, typeof(patchFields.isTasker),"patchFields.isTasker")
         let afterUpdate;
         if (patchFields.deleted) {
-            patchFields.email = user.email + "-" + uuidv1()
+            patchFields.email = user.email + "-" + uuidv4()
         }
         if (patchFields.isTasker !== undefined) {
             let send = async (id, isTasker, setupCompleted) => {
