@@ -7,7 +7,7 @@ const getModelsFromFields = require("../utils/getModelsFromFields");
 
 const FIELD_MODEL = {
     tasker: { model: Tasker, include: [ User ] },
-    task: Task
+    task: { model: Task, include: [ { model: Offer, required: false } ] }
 }
 
 module.exports = {

@@ -1,7 +1,8 @@
 
 module.exports = {
     "OFFER_RECEIVED": ({ user_1, user_2, task }) => ({
-        text: `${user_2.first_name} ${user_2.last_name[0]} made an offer at “${task.title}”`,
+        text: `${user_2.first_name} ${user_2.last_name[0]} made an offer at “${task.title}”<br/>
+        `,
         to: user_1.email,
         html: `${user_2.first_name} ${user_2.last_name[0]} made an offer at “${task.title}”`,
         subject: `Eazytask: Offer received for “${task.title}”`
@@ -14,10 +15,9 @@ module.exports = {
     }),
     "AFTER_OFFER_ACCEPTED": ({ user_1, user_2, task }) => {
         let text = `Contact Information for ${user_2.first_name} ${user_2.last_name[0]}. :<br/>`
-        text += `Number: ${user_2.phone_number}<br/>
+        text += `${user_2.phone_number === "+41" ? "" : `Number: ${user_2.phone_number}<br/>`}
         Email: ${user_2.email}<br/>
-        Address: ${user_2.address}<br/>
-        `
+        Full Name: ${user_2.first_name} ${user_2.last_name}\n`
         return {
             text: text,
             html: text,
@@ -28,14 +28,16 @@ module.exports = {
     "NEW_CHAT_MESSAGE": ({ user_1, user_2, task }) => {
         let isAnswer = task.UserId === user_2.id;
         if (isAnswer) {
-            let text = `${user_2.first_name} ${user_2.last_name[0]} answered a question in “${task.title}” QA`
+            let text = `${user_2.first_name} ${user_2.last_name[0]} answered a question in “${task.title}” QA<br/>
+            Task: ${process.env.BASE_URL}/task/${task.id}`
             return {
                 text, html: text,
                 to: user_1.email,
                 subject: `Eazytask: New answer in “${task.title}” QA`
             }
         } else {
-            let text = `${user_2.first_name} ${user_2.last_name[0]} asked a question in “${task.title}” QA`
+            let text = `${user_2.first_name} ${user_2.last_name[0]} asked a question in “${task.title}” QA<br/>
+            Task: ${process.env.BASE_URL}/task/${task.id}`
             return {
                 text, html: text,
                 to: user_1.email,
