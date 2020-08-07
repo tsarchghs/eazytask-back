@@ -4,10 +4,11 @@ const { Task, Tasker, Offer, User } = require("../../models")
 const { ErrorHandler } = require("../../utils/error")
 
 const getModelsFromFields = require("../utils/getModelsFromFields");
+const cloneDeep = require("../utils/cloneDeep");
 
 const FIELD_MODEL = {
     tasker: { model: Tasker, include: [ User ] },
-    task: { model: Task, include: [ { model: Offer, required: false } ] }
+    task: { model: Task.scope("all"), required: false, include: [ { model: Offer, required: false } ] }
 }
 
 module.exports = {

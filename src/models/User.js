@@ -42,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
         city: DataTypes.STRING,
         zipCode: DataTypes.STRING,
         address: DataTypes.STRING,
-        profile_image: DataTypes.STRING,
-        cover_image: DataTypes.STRING,
+        profile_image: DataTypes.TEXT,
+        cover_image: DataTypes.TEXT,
         setupCompleted: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,

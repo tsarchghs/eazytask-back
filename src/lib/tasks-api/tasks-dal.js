@@ -188,13 +188,32 @@ module.exports = {
         if (gallery) {
             let gallery_file_urls = []
             for (file of gallery) {
-                let url = await uploadFile(file)
+                // hacky, do not copy me
+                let url;
+                let i = file.mimetype.split(",");
+                if (i[1]) {
+                    url = i[1]
+                    // endhacky
+                } else {
+                    url = await uploadFile(file)
+                }
+
                 gallery_file_urls.push(url);
             }
             patchFields.gallery = gallery_file_urls.join(",")
             console.log("gallery_file_urls", gallery_file_urls)
         }
-        if (thumbnail) patchFields.thumbnail = await uploadFile(thumbnail)
+        if (thumbnail) {
+            let url;
+            let i = thumbnail.mimetype.split(",");
+            if (i[1]) {
+                url = i[1]
+                // endhacky
+            } else {
+                url = await uploadFile(thumbnail)
+            }
+            patchFields.thumbnail = url
+        }
         if (remove_thumbnail) patchFields.thumbnail = null
         if (remove_gallery) patchFields.gallery = null
         if (category){
