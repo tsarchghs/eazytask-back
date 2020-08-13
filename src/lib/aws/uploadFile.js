@@ -7,8 +7,7 @@ const fetch = require("node-fetch")
 
 module.exports = async (file) => {
     console.log("ENTERING")
-    let key = `${uuid()}-${file.originalname}`;
-    key = key.split(" ").join("-")
+    let key = `${uuid()}-${file.originalname.split(" ").join("-")}`;
     let keys = [
         key,
         "small-" + key,
