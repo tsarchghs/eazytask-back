@@ -172,7 +172,7 @@ app.post("/users", validateRequest(post_users), async (req, res) => {
     let text = `Click on this link to verify your account (Valid for 1 hour): ${url}`
     email.text = text; email.html = text;
     console.log(email)
-    await emailManager.sendEmail(email)
+    emailManager.sendEmail(email)
     return res.json({
         message: "success",
         code: 201,
