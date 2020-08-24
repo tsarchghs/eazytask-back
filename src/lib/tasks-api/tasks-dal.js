@@ -193,6 +193,7 @@ module.exports = {
                 let i = file.mimetype.split(",");
                 if (i[1]) {
                     url = i[1]
+                    if (url.indexOf("data") !== -1) url = await uploadFile(file)
                     // endhacky
                 } else {
                     url = await uploadFile(file)
@@ -208,6 +209,9 @@ module.exports = {
             let i = thumbnail.mimetype.split(",");
             if (i[1]) {
                 url = i[1]
+                console.log("HACKKYYY",url)
+                if (url.indexOf("data") !== -1) url = await uploadFile(file)
+                console.log("HACKKYYY",url)
                 // endhacky
             } else {
                 url = await uploadFile(thumbnail)
