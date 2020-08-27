@@ -1,5 +1,4 @@
 
 
 module.exports = [
-    "Moving", "Cleaning"
 ]

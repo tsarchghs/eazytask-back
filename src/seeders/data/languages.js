@@ -1,4 +1,4 @@
 
 module.exports = [
-    "English", "Deutch", "Shqip"
+    "English", "Italian", "French", "German"
 ]
