@@ -44,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
         address: DataTypes.STRING,
         profile_image: DataTypes.TEXT,
         cover_image: DataTypes.TEXT,
+        language: {
+            type: DataTypes.STRING,
+            defaultValue: "de",
+            allowNull: false
+        },
         setupCompleted: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
