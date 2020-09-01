@@ -6,7 +6,7 @@ const client = require('twilio')(
 const getPhoneVerificationCodeSMS = ({ code, to }) => {
     return {
         from: process.env.TWILIO_NUMBER, to,
-        body: "Verification code: " + code
+        body: "Verifizierungscode: " + code
     }
 }
 

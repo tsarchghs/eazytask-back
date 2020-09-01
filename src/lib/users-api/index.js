@@ -169,7 +169,7 @@ app.post("/users", validateRequest(post_users), async (req, res) => {
     let email = { to: user.email, subject: "Eazytask: Account Verification" };
     let token = createToken(user.id)
     let url = `${process.env.BASE_URL}/verify_account/${token}`
-    let text = `Click on this link to verify your account (Valid for 1 hour): ${url}`
+    let text = `Klicke auf diesen Link, um dein Konto zu verifizieren (1 Stunde gültig): ${url}`
     email.text = text; email.html = text;
     console.log(email)
     emailManager.sendEmail(email)
