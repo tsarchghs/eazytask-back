@@ -5,7 +5,7 @@ module.exports = {
         to: user_1.phone_number
     }),
     "OFFER_ACCEPTED": ({ user_1, user_2, task }) => ({
-        body: `${user_2.first_name} ${user_2.last_name[0]} hat dein Angebot für “${task.title}”`,
+        body: `${user_2.first_name} ${user_2.last_name[0]} hat dein Angebot für “${task.title}” angenommen`,
         to: user_1.phone_number
     }),
     "AFTER_OFFER_ACCEPTED": ({ user_1, user_2, task }) => {
