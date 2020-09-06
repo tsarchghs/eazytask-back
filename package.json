@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/app",
     "dev": "nodemon src/app",
+    "production": "node src/cluster",
     "reset-and-seed": "node helpers/reset-and-seed",
     "reset-and-seed-mock": "node helpers/reset-and-seed-mock",
     "test": "jest __tests__/functional.test.js --force-exit --coverage",
