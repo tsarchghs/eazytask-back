@@ -11,12 +11,11 @@ let run = async () => {
         "categories-groups-seed",
         "cities-seed",
         "languages-seed",
-        "skills-seed",
         "categories-seed"
     ]
     let seed_cmd = "npx sequelize-cli db:seed --seed"
-    let cmd = seeds.map(seed_name => seed_cmd + " " + seed_name).join("&&");
-
+    let cmd = seeds.map(seed_name => seed_cmd + " " + seed_name).join(" && ");
+    console.log(cmd)
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
