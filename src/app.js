@@ -3,7 +3,7 @@ if (!process.env.CUSTOM_ENV_PATH) require('dotenv').config()
 require('express-async-errors');
 
 const models = require("./models")
-models.sequelize.sync({ force: false || process.env.DROP_TABLES_HEROKU });
+models.sequelize.sync({ force: false });
 
 const http = require('http');
 const express = require('express')
@@ -11,7 +11,7 @@ const compression = require("compression");
 const bodyParser = require("body-parser")
 const logger = require("morgan")("dev")
 
-const { errorHandler, caseInsensitiveEmail, allowCrossDomain } = require("./middlewares")
+const { errorHandler, caseInsensitiveEmail, allowCrossDomain, requireHttps } = require("./middlewares")
 
 const api_docs = require("./lib/api-docs")
 const auth_api = require("./lib/auth-api")
@@ -42,6 +42,7 @@ app.use(express.json({limit: '50mb'}));
 app.use(logger)
 app.use(caseInsensitiveEmail)
 app.use(allowCrossDomain)
+app.use(requireHttps);
 
 // let appInstances = [app, api_docs, auth_api, users_api, tasks_api, categories_api, languages_api, skills_api, taskers_api, offers_api];
 // appInstances.forEach(a => a.use(allowCrossDomain))
@@ -71,7 +72,7 @@ if (require.main === module) {
     const PORT = process.env.PORT || 4000;
     server.listen(PORT,() => console.log("Running on port: ",PORT))
     if (process.env.ENBALE_ADMIN){
-        require("./lib/admin").listen(process.env.PORT || 4001, () => console.log("Admin running on: ",PORT + 1))
+        require("./lib/admin").listen(4001, () => console.log("Admin running on: ",PORT + 1))
     }
 }
 

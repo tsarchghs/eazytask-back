@@ -1,21 +1,16 @@
-const errorHandler = require("./errorHandler");
-const validateRequest = require("./validateRequest")
-const caseInsensitiveEmail = require("./caseInsensitiveEmail")
-const jwtRequired = require("./jwtRequired")
-const passUserFromJWT = require("./passUserFromJWT")
-const passTaskerFromUser = require("./passTaskerFromUser");
-const requireAdminAccess = require("./requireAdminAccess")
-const allowCrossDomain = require("./allowCrossDomain");
-const adminRequired = require("./adminRequired");
+let fs = require("fs");
+var path = require('path');
+var basename = path.basename(__filename);
 
-module.exports = {
-    errorHandler,
-    validateRequest,
-    caseInsensitiveEmail,
-    jwtRequired,
-    passUserFromJWT,
-    passTaskerFromUser,
-    requireAdminAccess, 
-    allowCrossDomain,
-    adminRequired
-}
+let middlewares = {}
+
+fs.readdirSync(__dirname)
+    .filter(file => {
+        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+    })
+    .forEach(file => {
+        const middleware = require(path.join(__dirname, file))
+        middlewares[file.split(".")[0]] = middleware;
+    });
+
+module.exports = middlewares
