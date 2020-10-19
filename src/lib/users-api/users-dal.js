@@ -84,6 +84,12 @@ module.exports = {
         console.log(patchFields.isTasker, typeof(patchFields.isTasker),"patchFields.isTasker")
         let afterUpdate;
         if (patchFields.deleted) {
+            let text = `User ${user.first_name} ${user.last_name} (${user.email},${user.phone_number}) has deleted their account.`
+            emailManager.sendEmail({
+                to: "hello@eazytask.ch",
+                subject: "Eazytask: User deleted account",
+                text, html: text,
+            })
             patchFields.email = user.email + "-" + uuid()
         }
         if (patchFields.isTasker !== undefined) {
