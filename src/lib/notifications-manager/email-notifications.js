@@ -1,5 +1,17 @@
 
 module.exports = {
+    "ASKER_TO_TASKER_REVIEW": ({ user_1, user_2, task }) => ({
+        text: `${user_1.first_name} ${user_1.last_name[0]} please give us a review for “${task.title}” (Optional) \nClick on this link to review the tasker: ${process.env.BASE_URL}/task/${task.id}/review`,
+        to: user_1.email,
+        html: `${user_1.first_name} ${user_1.last_name[0]} please give us a review for “${task.title}” (Optional) \nClick on this link to review the tasker: ${process.env.BASE_URL}/task/${task.id}/review`,
+        subject: `eazytask: Angebot für “${task.title}” erhalten`
+    }),
+    "TASKER_TO_ASKER_REVIEW": ({ user_1, user_2, task }) => ({
+        text: `${user_1.first_name} ${user_1.last_name[0]} please give us a review for “${task.title}” (Optional) \nClick on this link to review the asker: ${process.env.BASE_URL}/task/${task.id}/review`,
+        to: user_1.email,
+        html: `${user_1.first_name} ${user_1.last_name[0]} please give us a review for “${task.title}” (Optional) \nClick on this link to review the asker: ${process.env.BASE_URL}/task/${task.id}/review`,
+        subject: `eazytask: Angebot für “${task.title}” erhalten`
+    }),
     "OFFER_RECEIVED": ({ user_1, user_2, task }) => ({
         text: `${user_2.first_name} ${user_2.last_name[0]} hat ein Angebot für “${task.title}” abgegeben<br/>
         `,
