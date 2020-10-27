@@ -28,6 +28,7 @@ const messages_api = require("./lib/messages-api");
 const posts_api = require("./lib/posts-api");
 const notifications_api = require("./lib/notifications-api");
 const statistics_api = require("./lib/statistics-api");
+const reviews_api = require("./lib/reviews-api");
 const messages_ws = require("./lib/messages_ws");
 
 const app = express();
@@ -42,7 +43,8 @@ app.use(express.json({limit: '50mb'}));
 app.use(logger)
 app.use(caseInsensitiveEmail)
 app.use(allowCrossDomain)
-app.use(requireHttps);
+if (process.env.DEBUG !== "1") 
+    app.use(requireHttps);
 
 // let appInstances = [app, api_docs, auth_api, users_api, tasks_api, categories_api, languages_api, skills_api, taskers_api, offers_api];
 // appInstances.forEach(a => a.use(allowCrossDomain))
@@ -62,6 +64,7 @@ app.use("/api/v1/", messages_api);
 app.use("/api/v1/", posts_api);
 app.use("/api/v1/", notifications_api);
 app.use("/api/v1/", statistics_api);
+app.use("/api/v1/", reviews_api);
 
 // app.use("/api/v1",MainRouter)
 app.get('/', (req, res) => res.json({test:true}))
