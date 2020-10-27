@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM("ACTIVE", "DEACTIVATED", "DELETED"),
             default: "ACTIVE",
             allowNull: false
+        },
+        sent_review_links: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
         }
     },{
         defaultScope: {

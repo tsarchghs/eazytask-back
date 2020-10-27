@@ -3,7 +3,10 @@
 module.exports = (sequelize, DataTypes) => {
     let Notification = sequelize.define("Notification",{
         type: {
-            type: DataTypes.ENUM("NEW_CHAT_MESSAGE", "OFFER_RECEIVED", "OFFER_ACCEPTED", "AFTER_OFFER_ACCEPTED"),
+            type: DataTypes.ENUM(
+                "NEW_CHAT_MESSAGE", "OFFER_RECEIVED", "OFFER_ACCEPTED", "AFTER_OFFER_ACCEPTED",
+                "ASKER_TO_TASKER_REVIEW", "TASKER_TO_ASKER_REVIEW"
+            ),
             allowNull: false
         },
         read: {
