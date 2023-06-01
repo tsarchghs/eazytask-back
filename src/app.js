@@ -72,7 +72,7 @@ app.get('/', (req, res) => res.json({test:true}))
 app.use(errorHandler)
 
 if (require.main === module) {
-    const PORT = process.env.PORT || 4000;
+    const PORT = process.env.PORT || 4444;
     server.listen(PORT,() => console.log("Running on port: ",PORT))
     if (process.env.ENBALE_ADMIN){
         require("./lib/admin").listen(4001, () => console.log("Admin running on: ",PORT + 1))
