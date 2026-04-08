@@ -17,12 +17,16 @@ if (process.env.IN_TRAVIS){
     process.env.MYSQL_HOST = "localhost"
 }
 
-console.log(process.env.IN_TRAVIS, process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD,process.env.CLEARDB_DATABASE_URL,919)
+const databaseUrl = process.env.DATABASE_URL || process.env.database_url || process.env.CLEARDB_DATABASE_URL
+
+console.log(process.env.IN_TRAVIS, process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD,databaseUrl,919)
 
 let sequelize;
-// process.env.CLEARDB_DATABASE_URL = "mysql://b59cb6d4228b20:f27854d3@eu-cdbr-west-03.cleardb.net/heroku_2095ad35c7e34c8"
-if (process.env.CLEARDB_DATABASE_URL){
-    sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, { dialect: "mysql" });
+if (databaseUrl){
+    sequelize = new Sequelize(databaseUrl, {
+        dialect: process.env.DATABASE_URL || process.env.database_url ? "postgres" : "mysql",
+        logging: false
+    });
 } else {
     sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
         host: process.env.MYSQL_HOST,
