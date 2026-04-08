@@ -5,9 +5,6 @@ var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(__filename);
 
-// var env = process.env.NODE_ENV || 'development';
-// var config    = require(__dirname + '../config/config.js')[env];
-
 var db = {};
 
 if (process.env.IN_TRAVIS){
@@ -17,23 +14,26 @@ if (process.env.IN_TRAVIS){
     process.env.MYSQL_HOST = "localhost"
 }
 
-console.log(process.env.IN_TRAVIS, process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD,process.env.CLEARDB_DATABASE_URL,919)
+const databaseUrl = process.env.DATABASE_URL || process.env.database_url || process.env.CLEARDB_DATABASE_URL
+const isPostgresUrl = Boolean(databaseUrl && databaseUrl.startsWith('postgres'))
 
 let sequelize;
-// process.env.CLEARDB_DATABASE_URL = "mysql://b59cb6d4228b20:f27854d3@eu-cdbr-west-03.cleardb.net/heroku_2095ad35c7e34c8"
-if (process.env.CLEARDB_DATABASE_URL){
-    sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, { dialect: "mysql" });
+if (databaseUrl){
+    sequelize = new Sequelize(databaseUrl, {
+        dialect: isPostgresUrl ? 'postgres' : 'mysql',
+        logging: false
+    });
 } else {
     sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
         host: process.env.MYSQL_HOST,
-        dialect: "mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
+        dialect: 'mysql'/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
         logging: false
     });
 }
 
 sequelize.authenticate()
-    .then(() => console.log("Authenticated"))
-    .catch(err => console.log("Authentication failed!"));
+    .then(() => console.log('Authenticated'))
+    .catch(err => console.log('Authentication failed!', err));
 
 fs
     .readdirSync(__dirname)
@@ -41,7 +41,7 @@ fs
         return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
     })
     .forEach(file => {
-        if (file !== "common.js") {
+        if (file !== 'common.js') {
             var model = sequelize['import'](path.join(__dirname, file));
             db[model.name] = model;
         }
@@ -56,7 +56,6 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-
-console.log("CONNECTED TO ", db.sequelize.config.database)
+console.log('CONNECTED TO ', db.sequelize.config.database)
 
 module.exports = db;
