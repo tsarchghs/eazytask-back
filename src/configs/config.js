@@ -1,5 +1,7 @@
 require('dotenv').config()
 
+const databaseUrl = process.env.DATABASE_URL || process.env.database_url || process.env.CLEARDB_DATABASE_URL
+
 module.exports = {
   "development": {
     "username": process.env.MYSQL_USERNAME,
@@ -9,7 +11,7 @@ module.exports = {
     "dialect": "mysql",
   },
   "staging": {
-    "url": process.env.CLEARDB_DATABASE_URL,
-    "dialect": "mysql",
+    "url": databaseUrl,
+    "dialect": process.env.DATABASE_URL || process.env.database_url ? "postgres" : "mysql",
   },
 }
