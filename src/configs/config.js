@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const databaseUrl = process.env.DATABASE_URL || process.env.database_url || process.env.CLEARDB_DATABASE_URL
+const isPostgresUrl = Boolean(databaseUrl && databaseUrl.startsWith('postgres'))
 
 module.exports = {
   "development": {
@@ -12,6 +13,6 @@ module.exports = {
   },
   "staging": {
     "url": databaseUrl,
-    "dialect": process.env.DATABASE_URL || process.env.database_url ? "postgres" : "mysql",
+    "dialect": isPostgresUrl ? "postgres" : "mysql",
   },
 }

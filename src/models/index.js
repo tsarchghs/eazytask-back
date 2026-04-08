@@ -5,9 +5,6 @@ var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(__filename);
 
-// var env = process.env.NODE_ENV || 'development';
-// var config    = require(__dirname + '../config/config.js')[env];
-
 var db = {};
 
 if (process.env.IN_TRAVIS){
@@ -18,26 +15,25 @@ if (process.env.IN_TRAVIS){
 }
 
 const databaseUrl = process.env.DATABASE_URL || process.env.database_url || process.env.CLEARDB_DATABASE_URL
-
-console.log(process.env.IN_TRAVIS, process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD,databaseUrl,919)
+const isPostgresUrl = Boolean(databaseUrl && databaseUrl.startsWith('postgres'))
 
 let sequelize;
 if (databaseUrl){
     sequelize = new Sequelize(databaseUrl, {
-        dialect: process.env.DATABASE_URL || process.env.database_url ? "postgres" : "mysql",
+        dialect: isPostgresUrl ? 'postgres' : 'mysql',
         logging: false
     });
 } else {
     sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USERNAME, process.env.MYSQL_PASSWORD, {
         host: process.env.MYSQL_HOST,
-        dialect: "mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
+        dialect: 'mysql'/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
         logging: false
     });
 }
 
 sequelize.authenticate()
-    .then(() => console.log("Authenticated"))
-    .catch(err => console.log("Authentication failed!"));
+    .then(() => console.log('Authenticated'))
+    .catch(err => console.log('Authentication failed!', err));
 
 fs
     .readdirSync(__dirname)
@@ -45,7 +41,7 @@ fs
         return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
     })
     .forEach(file => {
-        if (file !== "common.js") {
+        if (file !== 'common.js') {
             var model = sequelize['import'](path.join(__dirname, file));
             db[model.name] = model;
         }
@@ -60,7 +56,6 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-
-console.log("CONNECTED TO ", db.sequelize.config.database)
+console.log('CONNECTED TO ', db.sequelize.config.database)
 
 module.exports = db;
